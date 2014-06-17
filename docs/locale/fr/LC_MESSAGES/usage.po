@@ -1,0 +1,39 @@
+#
+# Bogdan Cordier <bogdan.cordier@gmail.com>, 2015.
+# Bogdan 'Octogene' Cordier <ooctogene@gmail.com>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: Hadaly 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-31 05:25+0200\n"
+"PO-Revision-Date: 2015-05-31 13:12+0200\n"
+"Last-Translator: Bogdan 'Octogene' Cordier <ooctogene@gmail.com>\n"
+"Language-Team: French <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: ../../usage.rst:2
+msgid "Usage"
+msgstr "Utilisation"
+
+#: ../../usage.rst:5
+msgid "GNU/Linux"
+msgstr "GNU/Linux"
+
+#: ../../usage.rst:14
+msgid "Windows"
+msgstr "Windows"
+
+#: ../../usage.rst:16
+msgid ""
+"For now, to directly open a presentation file (\\*.opah) you'll have to "
+"drag'n drop the file on the hadaly.exe executable or the shortcut."
+msgstr ""
+"Actuellement, pour ouvrir directement un fichier de présentation (\\*.opah) "
+"vous devrez faire un glisser-déposer du fichier sur l'exécutable hadaly.exe "
+"ou son raccourci."
+

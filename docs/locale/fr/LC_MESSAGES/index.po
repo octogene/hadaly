@@ -1,0 +1,103 @@
+# Bogdan Cordier <bogdan.cordier@gmail.com>, 2015.
+# Bogdan 'Octogene' Cordier <ooctogene@gmail.com>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: Hadaly 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-31 05:25+0200\n"
+"PO-Revision-Date: 2015-06-01 16:01+0200\n"
+"Last-Translator: Bogdan 'Octogene' Cordier <ooctogene@gmail.com>\n"
+"Language-Team: French <>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: ../../index.rst:7
+msgid "Hadaly User Manual"
+msgstr "Manuel d'utilisateur pour Hadaly "
+
+#: ../../index.rst:19
+msgid ""
+"Presentations are saved as \\*.opah files which contains all the slides "
+"image files and their metadata (JSON)."
+msgstr ""
+"Les présentations sont enregistrées sous le format \\*.opah qui contient "
+"toutes les images des slides et leurs méta-données (JSON)."
+
+#: ../../index.rst:9
+msgid "This sofware is currently in alpha."
+msgstr "Ce logiciel est actuellement en alpha."
+
+#: ../../index.rst:11
+msgid ""
+"Hadaly is an interactive presentation software. It allows to manipulate "
+"slides in various ways during presentation. The goal is to offer a practical"
+" presentation software for art historians or any art enthusiasts."
+msgstr ""
+"Hadaly est un logiciel de présentation interactive. Il permet de manipuler "
+"des diapos de diverses manières pendant la présentation. L'objectif est "
+"d'offrir un logiciel de présentation pratique pour les historiens de l'art ou "
+"tout les amateurs d'art."
+
+#: ../../index.rst:15
+msgid ""
+"It contains an editor, viewer and a search engine. The editor allows you to "
+"build presentations by creating slides which are a combination of an image "
+"and informations (e.g: artist, title and year). The viewer allows you to "
+"show and manipulate the slides. The search engine allows you create slides "
+"from different online sources."
+msgstr ""
+"Il est composé d'un éditeur, une visionneuse et un moteur de recherche. "
+"L'éditeur permet de faire des présentations en créant des diapos qui sont la "
+"combinaison d'une image et d'informations (e.g: artiste, titre, année). La "
+"visionneuse permet de montrer et manipuler les diapos. Le moteur de recherche "
+"permet de créer des diapos à partir de sources en ligne."
+
+#: ../../index.rst:29
+msgid "Table of Content"
+msgstr "Table des matières"
+
+#~ msgid ""
+#~ "Hadaly is a presentation software allowing to manipulate slides, in various "
+#~ "ways during presentation. The goal is to offer a practical presentation "
+#~ "software for art historians or any other individual who wants to have a bit "
+#~ "more interaction with their presentations."
+#~ msgstr ""
+#~ "Hadaly est un logiciel de présentation permettant de manipuler ses diapos de"
+#~ " diverses manières durant la présentation. L'objectif est d'offrir un "
+#~ "logiciel de présentation pratique pour les historiens de l'art ou toutes les"
+#~ " personnes qui souhaite interagir un peu plus avec leurs diapos durant une "
+#~ "présentation."
+
+#~ msgid ""
+#~ "It contains a presentation editor and a viewer. The editor allows you to "
+#~ "build presentations by creating slides from pictures and by adding "
+#~ "information about them (e.g: artist, title and year). And, well, the viewer "
+#~ "allows you to show and manipulate the slides."
+#~ msgstr ""
+#~ "Il contient un éditeur de présentation et une visionneuse. L'éditeur permet "
+#~ "de créer des présentations en ajoutant des images comme diapo et en "
+#~ "renseignant des informations à leur propos (e.g: artiste, titre, année). La "
+#~ "visionneuses quant à elle permet de faire la présentation et manipuler les "
+#~ "diapos."
+
+#~ msgid "Contents"
+#~ msgstr "Contenus"
+
+#~ msgid "Indices and tables"
+#~ msgstr "Annexes et tableaux"
+
+#~ msgid ":ref:`genindex`"
+#~ msgstr ":ref:`genindex`"
+
+#~ msgid ":ref:`modindex`"
+#~ msgstr ":ref:`modindex`"
+
+#~ msgid ":ref:`search`"
+#~ msgstr ":ref:`search`"
+
+#~ msgid "This sofware is currently in beta."
+#~ msgstr "Ce logiciel est actuellement en beta."

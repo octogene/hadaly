@@ -1,0 +1,371 @@
+# Bogdan Cordier <bogdan.cordier@gmail.com>, 2015.
+# Bogdan 'Octogene' Cordier <ooctogene@gmail.com>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: Hadaly 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-31 05:25+0200\n"
+"PO-Revision-Date: 2015-05-31 13:12+0200\n"
+"Last-Translator: Bogdan 'Octogene' Cordier <ooctogene@gmail.com>\n"
+"Language-Team: French <>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: ../../interface.rst:18
+msgid "Interface"
+msgstr "Interface"
+
+#: ../../interface.rst:21
+msgid "Editor"
+msgstr "Éditeur"
+
+#: ../../interface.rst:28
+msgid "**Menubar**:"
+msgstr "**Bar de menu**"
+
+#: ../../interface.rst:42
+msgid "Edit presentation title"
+msgstr "Éditer le titre de la présentation"
+
+#: ../../interface.rst:46
+msgid ""
+"Click on 'New title' to show the edit dialog, press 'Enter' to validate."
+msgstr ""
+"Cliquez sur 'Nouveau titre' pour faire apparaître la fenêtre d'édition, "
+"pressez `Entrer` pour valider."
+
+#: ../../interface.rst:54
+msgid "Add new slide"
+msgstr "Ajouter une nouvelle diapo"
+
+#: ../../interface.rst:56
+msgid "To add new slide :"
+msgstr "Pour ajouter une diapo :"
+
+#: ../../interface.rst:59
+msgid ""
+"The file explorer appear : select the file you want to add as a slide by "
+"double clicking on it."
+msgstr ""
+"L'explorateur de fichier apparaît : sélectionnez le fichier que vous "
+"souhaitez ajouter comme diapo par un double clic. "
+
+#: ../../interface.rst:66
+msgid "The slide is added to the presentation view and a dialog appear."
+msgstr "La diapo est ajoutée à la présentation et une fenêtre apparaît."
+
+#: ../../interface.rst:73
+msgid "Enter slide informations and validate by pressing `Enter`."
+msgstr "Entrer les informations de la diapo et validez en pressant `Entrer`."
+
+#: ../../interface.rst:76
+msgid "Edit slide"
+msgstr "Éditer la diapo"
+
+#: ../../interface.rst:78
+msgid "Double click on the slide to show the edit dialog."
+msgstr ""
+"Double cliquez sur la diapo pour faire apparaître la fenêtre d'édition."
+
+#: ../../interface.rst:81
+msgid "Show slide informations"
+msgstr "Voir les informations de la diapo"
+
+#: ../../interface.rst:86
+msgid "Remove slide"
+msgstr "Enlever une diapo"
+
+#: ../../interface.rst:88
+msgid ""
+"Left click on slide, drag it on a corner of the screen and drop it, it "
+"should be removed from presentation."
+msgstr ""
+"En maintenant un clic gauche sur la diapo, déplacez là sur un bord de l'écran "
+"et relâchez, elle devrait être supprimée de la présentation. "
+
+#: ../../interface.rst:91
+msgid "Re-order slides"
+msgstr "Réordonner les diapos"
+
+#: ../../interface.rst:92
+msgid "Drag-and-drop the slide where you want it to be."
+msgstr "Glisser-déposer la diapo à l'endroit que vous souhaitez."
+
+#: ../../interface.rst:93
+msgid "Order is from top left to bottom right."
+msgstr "L'ordre se comprend de gauche à droite et de haut en bas."
+
+#: ../../interface.rst:96
+msgid "Search"
+msgstr "Recherche"
+
+#: ../../interface.rst:103
+msgid "**Menubar**"
+msgstr "**Bar de menu**"
+
+#: ../../interface.rst:110
+msgid "Click on app icon on the left : go back to editor."
+msgstr "Clic sur l'icône de l'application à gauche : retour à l'éditeur."
+
+#: ../../interface.rst:111
+msgid "Click on dropdown menu on the right : select search engine."
+msgstr ""
+"Clic sur le menu déroulant à droite : sélectionnez un moteur de recherche."
+
+#: ../../interface.rst:114
+msgid "Search for a picture"
+msgstr "Rechercher une image"
+
+#: ../../interface.rst:116
+msgid ""
+"Type your request in the text input box under the menubar and validate by "
+"pressing `Enter`"
+msgstr ""
+"Entrer votre requête dans la zone de texte sous la barre de menu et validez "
+"en pressant sur `Entrer`"
+
+#: ../../interface.rst:127
+msgid "Add picture as slide to presentation"
+msgstr "Ajouter l'image comme diapo à la présentation"
+
+#: ../../interface.rst:129
+msgid ""
+"Click on the picture you want to add to make appear a dialog showing a "
+"slightly better image (depending on the source)."
+msgstr ""
+"Cliquez sur l'image que vous souhaitez ajouter pour faire apparaître une "
+"fenêtre montrant l'image avec une qualité légèrement supérieure (en fonction "
+"de la source)."
+
+#: ../../interface.rst:136
+msgid "Click on `Add to presentation` to begin download."
+msgstr ""
+"Cliquez sur `Ajouter à la présentation` pour démarrer le téléchargement."
+
+#: ../../interface.rst:138
+msgid "Hadaly always tries to download the best image quality."
+msgstr "Hadaly essaye toujours de télécharger une image de bonne qualité."
+
+#: ../../interface.rst:145
+msgid ""
+"Once download is finished, slide is automatically added to presentation with"
+" metadata extracted from the source if available."
+msgstr ""
+"Une fois le téléchargement fini, la diapo est automatiquement ajoutée à la "
+"présentation avec les métadonnées extraites de la source si disponibles."
+
+#: ../../interface.rst:153
+msgid "Viewer"
+msgstr "Visionneuse"
+
+#: ../../interface.rst:161
+msgid "Move slide:"
+msgstr "Déplacer la diapo :"
+
+#: ../../interface.rst:163
+msgid "Left click on slide and drag it around the screen."
+msgstr "Clic gauche sur la diapo et déplacez la où vous souhaitez."
+
+#: ../../interface.rst:166
+msgid "Zoom in or out:"
+msgstr "Zoom :"
+
+#: ../../interface.rst:168
+msgid "Zoom with mouse wheel."
+msgstr "Zoom avec la molette de souris."
+
+#: ../../interface.rst:169
+msgid "Or use two finger touch emulation with right click (a red dot appear):"
+msgstr ""
+"Ou utilisez l'émulation tactile en faisant un clic droit (un point rouge "
+"apparaît) :"
+
+#: ../../interface.rst:177
+msgid ""
+"Maintain left click and drag cursor to zoom in or out. If a portion of the "
+"slide is out of sight, a small thumbnail will appear at the bottom left :"
+msgstr ""
+"Maintenez le clic gauche et déplacez le curseur pour zoomer ou dézoomer. Si "
+"une portion de l'image disparaît de l'écran, une petite vignette apparaîtra "
+"en bas à gauche de l'écran."
+
+#: ../../interface.rst:187
+msgid "Switch to editor:"
+msgstr "Passer à l'éditeur :"
+
+#: ../../interface.rst:189
+msgid "Double click on top left corner of the screen."
+msgstr "Double clic sur le coin supérieur gauche de l'écran."
+
+#: ../../interface.rst:192
+msgid "Switch to next or previous slide:"
+msgstr "Passer à la diapo suivante :"
+
+#: ../../interface.rst:194
+msgid "Left click and swipe left or right."
+msgstr "Clic gauche et glissez sur la droite ou la gauche."
+
+#: ../../interface.rst:197
+msgid "Switch to 'x' slide:"
+msgstr "Passer à la diapo 'x' :"
+
+#: ../../interface.rst:199
+msgid "Double click on bottom right corner of the screen and select slide:"
+msgstr ""
+"Double clic sur le coin inférieur droit de l'écran et sélectionnez la diapo :"
+
+#: ../../interface.rst:207
+msgid "Compare current slide with another one:"
+msgstr "Comparer la diapo avec une autre :"
+
+#: ../../interface.rst:209
+msgid "Double click on center of the screen and select slide:"
+msgstr "Double clic sur le centre de l'écran et sélectionnez la diapo"
+
+#: ../../interface.rst:216
+msgid "Compare mode in action:"
+msgstr "La vue de comparaison en action :"
+
+#: ../../interface.rst:223
+msgid "Double click on center of the screen to remove compared slide."
+msgstr ""
+"Double clic sur le centre de l'écran pour supprimer la diapo de comparaison."
+
+#: ../../interface.rst:226
+msgid "Draw on slide:"
+msgstr "Dessiner sur une diapo :"
+
+#: ../../interface.rst:228
+msgid ""
+"When drawing is activated it is not possible to move the slide. You can only"
+" scale it with mouse wheel."
+msgstr ""
+"Quand le mode «dessin» est activé, il n'est pas possible de déplacer la "
+"diapo. Vous pouvez seulement zoomer/dézoomer en utilisant la molette de la "
+"souris."
+
+#: ../../interface.rst:238
+msgid "You can now draw on the slide."
+msgstr "Vous pouvez maintenant dessiner sur la diapo."
+
+#: ../../interface.rst:248
+msgid "Change tool color:"
+msgstr "Changer la couleur de l'outil :"
+
+#: ../../interface.rst:257
+msgid ""
+"Select color by clicking on the color wheel or by entering RGBA "
+"informations."
+msgstr ""
+"Sélectionnez la couleur en cliquant sur le cercle chromatique ou en entrant "
+"les informations RGBA."
+
+#: ../../interface.rst:258
+msgid "Click out of the dialog to close it."
+msgstr "Cliquez en dehors de la fenêtre pour la fermer."
+
+#: ../../interface.rst:261
+msgid "Increase/Decrease tool thickness"
+msgstr "Augmenter/Réduire l'épaisseur de l'outil"
+
+#: ../../interface.rst:263
+msgid ""
+"Move the slider of the toolbar to the right to increase line size (Mouse "
+"wheel also works)."
+msgstr ""
+"Déplacez le curseur de la barre d'outil à droite pour augmenter la taille du "
+"trait (La molette fonctionne aussi)."
+
+#: ../../interface.rst:266
+msgid "Options"
+msgstr "Options"
+
+#: ../../interface.rst:268
+msgid "'F1' : Show options panel."
+msgstr "'F1' : Afficher le menu d'options."
+
+#: ../../interface.rst:277
+msgid "Shortcuts"
+msgstr "Raccourcis"
+
+#: ../../interface.rst:279
+msgid "``Ctrl-e`` : Enter drawing mode."
+msgstr "``Ctrl-e`` : Activer/désactiver le mode «dessin»."
+
+#: ../../interface.rst:280
+msgid "``Ctrl-d`` : Delete drawings."
+msgstr "``Ctrl-d`` : Effacer les dessins."
+
+#: ../../interface.rst:281
+msgid "``Left`` : Go to previous slide."
+msgstr "``Gauche``: Allez à la diapo précédente."
+
+#: ../../interface.rst:282
+msgid "``Right`` : Go to next slide."
+msgstr "``Droite`` : Allez à la diapo suivante"
+
+#: ../../interface.rst:34
+msgid ""
+"'New title' : Show/Configure presentation title (`see <#edit-presentation-"
+"title>`_)"
+msgstr ""
+"'Nouveau titre' : Montre/Configure le titre de la présentation (`voir <"
+"#edit-presentation-title>`_)"
+
+#: ../../interface.rst:35
+msgid "|plus| : Add slide to presentation. ( `see <#add-new-slide>`_)"
+msgstr ""
+"|plus| : Ajouter une diapo à la présentation. ( `voir <#add-new-slide>`_)"
+
+#: ../../interface.rst:36
+msgid "|search| : Switch to `search <#search>`_."
+msgstr "|search| : Afficher l'écran de `recherche <#id2>`_."
+
+#: ../../interface.rst:37
+msgid "|eye| : Switch to `viewer <#viewer>`_."
+msgstr "|eye| : Afficher la `visionneuse <#id3>`_."
+
+#: ../../interface.rst:38
+msgid "|bars| : File Menu (New, Open, Save, Save as..., Quit)"
+msgstr ""
+"|bars| : Menu (Nouveau, Ouvrir, Enregistrer, Enregistrer sous..., Quitter)"
+
+#: ../../interface.rst:58
+msgid "Left click on |plus| icon."
+msgstr "Clic gauche sur l'icône |plus|."
+
+#: ../../interface.rst:83
+msgid "Click on |info| to show/hide slide informations."
+msgstr "Cliquez sur |info| pour afficher/cacher les informations de la diapo."
+
+#: ../../interface.rst:123
+msgid "|next| : show next page of results."
+msgstr "|next| : Afficher la page suivante des résultats."
+
+#: ../../interface.rst:124
+msgid "|previous| : show previous page of results."
+msgstr "|previous| :  Afficher la page précédente des résultats."
+
+#: ../../interface.rst:230
+msgid "Click on |unlock| icon in bottom left corner."
+msgstr "Cliquez sur l'icône |unlock| dans le coin inférieur gauche."
+
+#: ../../interface.rst:231
+msgid "Icon should change to |lock| and toolbar should appear."
+msgstr ""
+"L'icône devrait se transformer en |lock| et la barre d'outils devrait "
+"apparaître."
+
+#: ../../interface.rst:245
+msgid "To delete drawings, click on |eraser|."
+msgstr "Pour effacer les dessins, cliquez sur |eraser|."
+
+#: ../../interface.rst:250
+msgid "Click on |circle| to show the color picker"
+msgstr "Cliquez sur |circle| pour afficher le sélectionneur de couleur."
+
+

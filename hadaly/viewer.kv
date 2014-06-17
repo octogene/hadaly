@@ -1,0 +1,163 @@
+#:kivy 1.9.0
+#:import SlideViewer hadaly.viewer.SlideViewer
+#:import PainterToolBar hadaly.viewer.PainterToolBar
+#:import Painter hadaly.painter.Painter
+#:import win kivy.core.window
+
+<ViewerScreen>:
+    app: app
+    box: _box
+    carousel: _carousel
+    BoxLayout:
+        id: _box
+        spacing: dp(10)
+        Carousel:
+            id: _carousel
+            direction: 'right'
+            loop: False
+
+<ImgFullZoom>:
+    pos_hint: 0, 0
+    size: 200, 200
+    size_hint: None, None
+    keep_ratio: True
+    allow_stretch: False
+    id: _img_zoom
+
+<SlidesDialog>:
+    grid: _grid
+    size_hint: 0.6, 0.6
+    GridLayout:
+        id: _grid
+        cols: 6
+        padding: [5,5,5,5]
+        spacing: dp(5)
+        dialog: root
+
+<SlideButton>:
+    app:app
+    on_press: self.parent.dialog.dismiss()
+
+<SlideBox>:
+    viewer: _viewer
+    float_layout: _float_layout
+    toolbar: _toolbar
+    painter: _painter
+    FloatLayout:
+        id: _float_layout
+        viewer: _viewer
+        SlideViewer:
+            id: _viewer
+            slidebox: root
+            app: app
+            image: _image
+            painter: _painter
+            do_rotation: False
+            size: self.size
+            on_size: self.center = self.center
+            pos: self.parent.pos
+            auto_bring_to_front: False
+            AsyncImage:
+                source: root.slide['img_src']
+                keep_ratio: True
+                mipmap: True
+                id: _image
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            Painter:
+                id: _painter
+                locked: True
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+        AnchorLayout:
+            id: _gui_layout
+            anchor_x:'right'
+            anchor_y: app.config.get('viewer', 'caption_pos')
+            pos: self.parent.pos
+            BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: (0, 0, 0, 1)
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                orientation:'vertical'
+                size_hint: 0.35, 0.1
+                padding: [5, 5, 5, 5]
+                ViewSlideLabel:
+                    id: _caption_artist
+                    text: root.slide.artist
+                ViewSlideLabel:
+                    id: _caption_title
+                    text: root.slide.title
+                    italic: True
+                ViewSlideLabel:
+                    id: _caption_year
+                    text: root.slide.year
+            BoxLayout:
+                id: _toolbar
+                lock_btn: _lock_btn
+                orientation: 'horizontal'
+                spacing: dp(3)
+                Button:
+                    id: _lock_btn
+                    background_color: [1, 1, 1, 0]
+                    border_color: [1,1,1,1]
+                    text: u'\uf13e'
+                    font_name: 'data/fonts/fontawesome-webfont.ttf'
+                    font_size: '30sp'
+                    size_hint: (None, None)
+                    size: (30, 30)
+                    on_press: root.viewer.lock()
+
+<ViewSlideLabel@Label>:
+    font_size: app.config.getint('viewer', 'font_size')
+    text_size: self.width, self.height
+    size: self.parent.width, self.texture_size[1]
+    shorten: True
+    shorten_from: 'right'
+    halign: 'center'
+
+<SlideImage@Image>:
+    keep_ratio: True
+    allow_stretch: False
+    id: _image
+    size: 400, 400
+
+<PainterToolBar>:
+    id: _toolbar
+    orientation: 'horizontal'
+    color_picker: _color_picker
+    thickness: _slider.value
+    size_hint: None, None
+    size: (200, 40)
+    spacing: dp(3)
+    Button:
+        background_color: [1, 1, 1, 0]
+        border_color: [1,1,1,1]
+        text: u'\uf12d'
+        font_name: 'data/fonts/fontawesome-webfont.ttf'
+        font_size: '30sp'
+        size_hint: (None, None)
+        size: (dp(30), dp(30))
+        on_press: root.painter.canvas.clear()
+    Button:
+        id: _color_picker
+        background_color: [1, 1, 1, 0]
+        border_color: [1,1,1,1]
+        text: u'\uf111'
+        color: root.paint_color
+        font_name: 'data/fonts/fontawesome-webfont.ttf'
+        font_size: '30sp'
+        size_hint: (None, None)
+        size: (dp(30), dp(30))
+        on_press: root.show_color_picker()
+    Slider:
+        id: _slider
+        orientation: 'horizontal'
+        min:0.5
+        max:10
+        step: 0.5
+        value: 0.5
+
+
+

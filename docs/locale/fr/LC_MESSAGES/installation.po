@@ -1,0 +1,104 @@
+# Bogdan Cordier <bogdan.cordier@gmail.com>, 2015.
+# Bogdan 'Octogene' Cordier <ooctogene@gmail.com>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: Hadaly 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-31 05:25+0200\n"
+"PO-Revision-Date: 2015-06-01 15:56+0200\n"
+"Last-Translator: Bogdan 'Octogene' Cordier <ooctogene@gmail.com>\n"
+"Language-Team: French <>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: ../../installation.rst:2
+msgid "Installation"
+msgstr "Installation"
+
+#: ../../installation.rst:4
+msgid ""
+"Please keep in mind that the current version (0.1a) is an alpha version. "
+"Elements of the interfaces don't work, bugs are there waiting to cast "
+"shadows on your computer and on the performance side it might me the most "
+"non-optimized software. But hey, who cares to read docs these days ?"
+msgstr ""
+"Veuillez garder à l'esprit que la version actuelle (0.1a) est une version "
+"alpha. Certains éléments de l'interface ne fonctionne pas ou mal et il est "
+"fort probable qu'un bug vienne vous surprendre au détour d'un clic. Quant "
+"aux performances, la question n'est pas encore à l'ordre du jour... Mais "
+"bon, de toute manière qui se donne la peine de lire la documentation de nos "
+"jours ? "
+
+#: ../../installation.rst:8
+msgid "GNU/Linux"
+msgstr "GNU/Linux"
+
+#: ../../installation.rst:11
+msgid "Requirements"
+msgstr "Dépendances"
+
+#: ../../installation.rst:15
+msgid "Pillow >= 2.8.1"
+msgstr "Pillow >= 2.8.1"
+
+#: ../../installation.rst:16
+msgid "kivy >= 1.9.0"
+msgstr "kivy >= 1.9.0"
+
+#: ../../installation.rst:22
+msgid "kivy.garden.magnet"
+msgstr "kivy.garden.magnet"
+
+#: ../../installation.rst:32
+msgid ""
+"For now, no setup or binary are available, you have to clone the repository:"
+msgstr ""
+"Actuellement, aucun setup ni binaire ne sont disponibles, il vous faut "
+"cloner le dépôt:"
+
+#: ../../installation.rst:40
+msgid "Windows"
+msgstr "Windows"
+
+#: ../../installation.rst:42
+msgid "Current version was only tested on Windows 7."
+msgstr "La version actuelle n'a été testé que sous Windows 7."
+
+#: ../../installation.rst:44
+msgid "Download setup at : https://github.com/octogene/hadaly/releases/latest"
+msgstr ""
+"Téléchargez l'installateur : "
+"https://github.com/octogene/hadaly/releases/latest"
+
+#: ../../installation.rst:47
+msgid "Android"
+msgstr "Android"
+
+#: ../../installation.rst:13
+msgid "python >= 2.7 (compatible with python 3.4)"
+msgstr "python >= 2.7 (compatible avec python 3.4)"
+
+#: ../../installation.rst:14
+msgid "lxml >= 3.4"
+msgstr "lxml >= 3.4"
+
+#: ../../installation.rst:23
+msgid "kivy.garden.filechooserthumbview"
+msgstr "kivy.garden.filechooserthumbview"
+
+#: ../../installation.rst:49
+msgid "Soon..."
+msgstr "Bientôt..."
+
+#~ msgid "python >= 2.7.7 (compatible with python 3.4)"
+#~ msgstr "python >= 2.7.7 (compatible avec python 3.4)"
+
+#~ msgid "lxml >= 3.4.4"
+#~ msgstr "lxml >= 3.4.4"
+
+#~ msgid "To come..."
+#~ msgstr "À venir..."

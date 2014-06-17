@@ -1,0 +1,70 @@
+[
+  {"type":"title", "title":"Editor"},
+  
+  { "type":"numeric",
+    "title":"Font size", 
+    "desc":"Size of font for slide label", 
+    "section":"editor", 
+    "key":"font_size" },
+  
+  { "type":"bool",
+    "title":"Auto-save",
+    "desc":"Save every x minutes (Not yet functional)",
+    "section":"editor",
+    "key":"autosave",
+    "true":"auto" },
+  
+  { "type":"numeric",
+    "title":"Saving interval", 
+    "desc":"Time between each autosave in minutes (Not yet functional)", 
+    "section":"editor", 
+    "key":"autosave_time" },
+    
+  { "type":"bool",
+    "title":"File explorer thumbnail view",
+    "desc":"Activate thumbnail view in file explorer (Can be slow)",
+    "section":"editor",
+    "key":"thumbview",
+    "true":"auto" },
+  
+  { "type":"title", "title":"Viewer" },
+  
+  { "type":"numeric",
+    "title":"Font size",
+    "desc":"Size of font for slides caption", 
+    "section":"viewer", 
+    "key":"font_size" },
+  
+  { "type":"bool",
+    "title":"Thumbnail on zoom",
+    "desc":"Show thumbnail on zoom",
+    "section":"viewer",
+    "key":"thumb",
+    "true":"auto" },
+  
+  { "type":"options",
+    "title":"Thumbnail position",
+    "desc":"Position of the thumbnail on zooming",
+    "section":"viewer",
+    "key":"thumb_pos",
+    "options": ["top left", "top right", "bottom left", "bottom right"] },
+    
+  { "type":"options",
+    "title":"Caption position",
+    "desc":"Position of the caption on the screen.",
+    "section":"viewer",
+    "key":"caption_pos",
+    "options": ["top", "bottom"] },
+    
+  { "type":"title", "title":"Search" },
+  
+  { "type":"options",
+    "title":"Global number of results to ask for. (Not shown)",
+    "desc":"May slightly change depending on search provider.",
+    "section":"search",
+    "key":"search_rpp",
+    "options": ["10", "30", "60", "90"] }
+  
+  
+
+]

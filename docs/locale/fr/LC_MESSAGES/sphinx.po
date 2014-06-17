@@ -1,0 +1,21 @@
+#
+# Bogdan 'Octogene' Cordier <ooctogene@gmail.com>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: Hadaly 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-06-01 15:54+0200\n"
+"PO-Revision-Date: 2015-06-01 16:01+0200\n"
+"Last-Translator: Bogdan 'Octogene' Cordier <ooctogene@gmail.com>\n"
+"Language-Team: French <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: ../../_templates/navigationa.html:1
+msgid "Contents"
+msgstr "Contenus"
+

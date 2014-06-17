@@ -1,0 +1,143 @@
+# French translations for PACKAGE package.
+# Copyright (C) 2015 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Bogdan Cordier <ooctogene@gmail.com>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-31 14:30+0200\n"
+"PO-Revision-Date: 2015-05-31 14:31+0200\n"
+"Last-Translator: Bogdan 'Octogene' Cordier <ooctogene@gmail.com>\n"
+"Language-Team: French <>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: hadaly/editor.kv:55
+msgid "New"
+msgstr "Nouveau"
+
+#: hadaly/editor.kv:58 hadaly/editor.kv:271
+msgid "Open"
+msgstr "Ouvrir"
+
+#: hadaly/editor.kv:61 hadaly/editor.kv:243
+msgid "Save"
+msgstr "Enregistrer"
+
+#: hadaly/editor.kv:64
+msgid "Save as..."
+msgstr "Enregistrer sous..."
+
+#: hadaly/editor.kv:68
+msgid "Quit"
+msgstr "Quitter"
+
+#: hadaly/editor.kv:141
+msgid "Informations"
+msgstr "Informations"
+
+#: hadaly/editor.kv:164
+msgid "Artist"
+msgstr "Artiste"
+
+#: hadaly/editor.kv:177
+msgid "Title"
+msgstr "Titre"
+
+#: hadaly/editor.kv:191
+msgid "Year"
+msgstr "Année"
+
+#: hadaly/editor.kv:204
+msgid "Set title"
+msgstr "Ajouter un titre"
+
+#: hadaly/editor.kv:220
+msgid "Save file"
+msgstr "Enregistrer"
+
+#: hadaly/editor.kv:240 hadaly/editor.kv:268
+msgid "Cancel"
+msgstr "Annuler"
+
+#: hadaly/editor.kv:248
+msgid "Open file"
+msgstr "Ouvrir"
+
+#: hadaly/search.kv:26 hadaly/search.py:56
+msgid "Select a search engine"
+msgstr "Choisir un moteur de recherche"
+
+#: hadaly/search.kv:108
+msgid "Add to presentation"
+msgstr "Ajouter à la présentation"
+
+#: hadaly/search.kv:114
+msgid "Downloading file..."
+msgstr "Téléchargement en cours..."
+
+#: hadaly/app.py:109 hadaly/app.py:112 hadaly/app.py:210 hadaly/app.py:459
+#: hadaly/app.py:486 hadaly/search.py:43 hadaly/search.py:57
+#: hadaly/search.py:117
+msgid "Error"
+msgstr "Erreur"
+
+#: hadaly/app.py:109
+msgid "File is not valid."
+msgstr "Fichier non valide"
+
+#: hadaly/app.py:112
+msgid "No file selected"
+msgstr "Aucun fichier sélectionné"
+
+#: hadaly/app.py:200
+msgid "File explorer"
+msgstr "Explorateur de fichiers"
+
+#: hadaly/app.py:210
+msgid "Nothing to save..."
+msgstr "Rien à enregistrer"
+
+#: hadaly/app.py:459 hadaly/app.py:486
+msgid "No results found."
+msgstr "Aucun résultats trouvés."
+
+#: hadaly/search.py:44
+msgid "Please enter a search term."
+msgstr "Veuillez entrer un terme de recherche."
+
+#: hadaly/search.py:58
+msgid "Please select a search engine."
+msgstr "Veuillez sélectionnez un moteur de recherche."
+
+#: hadaly/search.py:117
+msgid "High-res image not available, downloading inferior quality."
+msgstr ""
+"Image en haute résolution non disponible, une version de qualité inférieure "
+"a été téléchargée."
+
+#: hadaly/viewer.py:36
+msgid "Switch to..."
+msgstr "Passer à..."
+
+#: hadaly/viewer.py:58
+msgid "Compare to..."
+msgstr "Comparer à..."
+
+#~ msgid "Please select a search engine"
+#~ msgstr "Veuillez choisir un moteur de recherche."
+
+#~ msgid "Slide information"
+#~ msgstr "Informations"
+
+#~ msgid "Select slide to switch to"
+#~ msgstr "Passer à la slide..."
+
+#~ msgid "Select slide to compare to current slide"
+#~ msgstr "Comparer avec..."

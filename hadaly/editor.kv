@@ -1,0 +1,273 @@
+# -*- coding: utf-8 -*-
+#:kivy 1.9.0
+#:import FileThumbView hadaly.editor.FileThumbView
+#:import ThumbView hadaly.editor.ThumbView
+
+<EditorScreen@Screen>:
+    slides_view: _slides_view
+    action_bar: _action_bar
+    EditorView:
+        orientation: 'vertical'
+        id: build_view
+        ActionBar:
+            id: _action_bar
+            EditorBar:
+        SlidesView:
+            id: _slides_view
+
+<EditorView@BoxLayout>:
+
+<EditorBar@ContextualActionView>:
+    use_separator: True
+    ActionPrevious:
+        app_icon: app.icon
+        title:'Hadaly'
+        with_previous: False
+    ActionButton:
+        text: app.presentation['title']
+        horizontal: root.center_y
+        on_press: app.set_title()
+    ActionButton:
+        on_press: app.show_file_explorer()
+        font_name: 'data/fonts/fontawesome-webfont.ttf'
+        font_size: '20sp'
+        text: u'\uf0fe'
+    ActionOverflow:
+        id: action_overflow
+    ActionButton:
+        on_press: app.root.current = 'search'
+        font_name: 'data/fonts/fontawesome-webfont.ttf'
+        font_size: '20sp'
+        text: u'\uf002'
+    ActionButton:
+        on_press: app.root.current = 'viewer'
+        font_name: 'data/fonts/fontawesome-webfont.ttf'
+        font_size: '20sp'
+        text: u'\uf06e'
+    ActionGroup:
+        mode: 'spinner'
+        font_name: 'data/fonts/fontawesome-webfont.ttf'
+        font_size: '20sp'
+        text:u'\uf0c9'
+        id: action_group
+        size: (_save_as.texture_size[0] + 10, self.size[1])
+        ActionButton:
+            text: _('New')
+            on_release: action_group._dropdown.select(app.clear())
+        ActionButton:
+            text: _('Open')
+            on_release: action_group._dropdown.select(app.show_open())
+        ActionButton:
+            text: _('Save')
+            on_release: action_group._dropdown.select(app.show_save('save'))
+        ActionButton:
+            text: _('Save as...')
+            id: _save_as
+            on_release: action_group._dropdown.select(app.show_save('save_as'))
+        ActionButton:
+            text: _('Quit')
+            on_release: action_group._dropdown.select(app.stop())
+
+<SlidesView@FloatLayout>:
+    grid_layout: _grid_layout
+    BoxLayout:
+        padding: [dp(20), dp(20), dp(20), dp(20)]
+        GridLayout:
+            spacing: dp(20)
+            cols: 8
+            id: _grid_layout
+
+<DraggableSlide>:
+    size_hint: None, None
+    size: [dp(win.Window.width / 8 - 20 - 20/8)] * 2
+
+<Slide>:
+    app: app
+    orientation:'vertical'
+    size_hint: None, None
+    padding: [dp(10), dp(10), dp(10), 0]
+    spacing: dp(2)
+    image: _image
+    canvas.before:
+        Color:
+            rgba: (128, 128, 128, 0.3)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Image:
+        id: _image
+        source: root.thumb_src
+        keep_ratio: True
+        mipmap: True
+    Button:
+        size_hint: 0.2, 0.2
+        text: u'\uf05a'
+        text_size: self.size
+        font_name: 'data/fonts/fontawesome-webfont.ttf'
+        font_size: '20sp'
+        halign: 'left'
+        valign: 'middle'
+        background_color: [1, 1, 1, 0]
+        border_color: [1,1,1,1]
+        on_press: root.show_info_panel()
+
+
+
+<SlideInfo@BoxLayout>:
+    artist: _artist
+    title: _title
+    year: _year
+    orientation:'vertical'
+    size_hint: 1, 0.4
+    SlideLabel:
+        id: _artist
+    SlideLabel:
+        id: _title
+        italic: True
+    SlideLabel:
+        id: _year
+
+<SlideLabel@Label>:
+    font_size: app.config.getint('editor','font_size')
+    text_size: self.parent.width, self.height
+    size: self.parent.size
+    shorten: True
+    shorten_from: 'right'
+    halign: 'left'
+    valign: 'middle'
+
+
+<SlideInfoDialog>:
+    title: _('Informations')
+    app: app
+    size: [dp(size / 1.5) for size in app.root.size]
+    size_hint: None, None
+    content: _popup_content
+    title_field: _title_field
+    artist_field: _artist_field
+    year_field: _year_field
+    BoxLayout:
+        id: _popup_content
+        orientation: 'vertical'
+        padding: [dp(10),dp(10),dp(10),dp(10)]
+        spacing: dp(20)
+        AsyncImage:
+            id: _image
+            source: root.slide.thumb_src
+            keep_ratio: True
+        BoxLayout:
+            size_hint: (1, None)
+            orientation: 'vertical'
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: _('Artist')
+                    size_hint_x: 0.3
+                TextInput:
+                    focus: True
+                    focus_next: _title_field
+                    write_tab: False
+                    multiline: False
+                    text: root.slide.artist
+                    on_text: root.slide.artist = self.text
+                    id: _artist_field
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: _('Title')
+                    size_hint_x: 0.3
+                TextInput:
+                    focus_next: _year_field
+                    focus_previous: _artist_field
+                    write_tab: False
+                    multiline: False
+                    text: root.slide.title
+                    on_text: root.slide.title = self.text
+                    id: _title_field
+                    on_text_validate: root.on_validate()
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: _('Year')
+                    size_hint_x: 0.3
+                TextInput:
+                    focus_next: _artist_field
+                    focus_previous: _title_field
+                    write_tab: False
+                    multiline: False
+                    text: root.slide.year
+                    on_text: root.slide.year = self.text
+                    id: _year_field
+                    on_text_validate: root.on_validate()
+
+<TitleDialog@Popup>:
+    title: _('Set title')
+    size: 200, 100
+    size_hint: None, None
+    pres_title: _pres_title
+    app: app
+    BoxLayout:
+        orientation: 'vertical'
+        TextInput:
+            text: app.presentation['title']
+            multiline: False
+            id: _pres_title
+            on_text: app.presentation['title'] = self.text
+            on_text_validate: root.dismiss()
+
+
+<SaveDialog@Popup>:
+    title: _('Save file')
+    size_hint: 0.8, 0.8
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+            filters: ['*.opah']
+        TextInput:
+            id: text_input
+            text: '*.opah'
+            size_hint_y: None
+            height: 30
+            multiline: False
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: _('Cancel')
+                on_release: root.dismiss()
+            Button:
+                text: _('Save')
+                on_press: app.save(filechooser.path, text_input.text)
+                on_release: root.dismiss()
+
+<OpenDialog@Popup>:
+    title: _('Open file')
+    size_hint: 0.8, 0.8
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+            filters: ['*.opah']
+        TextInput:
+            id: text_input
+            text: '*.opah'
+            size_hint_y: None
+            height: 30
+            multiline: False
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: _('Cancel')
+                on_release: root.dismiss()
+            Button:
+                text: _('Open')
+                on_press: app.load_slides(filechooser.path, filechooser.selection)
+                on_release: root.dismiss()

@@ -1,0 +1,122 @@
+# -*- coding: utf-8 -*-
+#:kivy 1.9.0
+#:import SearchBox hadaly.search.SearchBox
+#:import SearchItemInfo hadaly.search.SearchItemInfo
+
+
+<SearchScreen>
+    box: _box
+    action_bar: _box.action_bar
+    SearchBox:
+        id: _box
+
+<SearchView@ContextualActionView>:
+    action_group: _action_group
+    use_separator: True
+    ActionPrevious:
+        app_icon: app.icon
+        title:'Hadaly'
+        with_previous: True
+        on_press: app.root.current = 'editor'
+    ActionOverflow:
+        id: action_overflow
+    ActionGroup:
+        mode: 'spinner'
+        font_size: '20sp'
+        text:_('Select a search engine')
+        id: _action_group
+        ActionButton:
+            text: 'MetMuseum'
+            on_press: root.action_group.text = self.text
+            on_release: self.parent.parent.select(self.text)
+        ActionButton:
+            text: 'Getty OCI'
+            on_press: root.action_group.text = self.text
+            on_release: self.parent.parent.select(self.text)
+
+<SearchBox>:
+    app: app
+    orientation: 'vertical'
+    padding: [0,0,0,0]
+    spacing: dp(5)
+    grid: _grid
+    term: _term
+    action_bar: _action_bar
+    ActionBar:
+        id: _action_bar
+        search_view: _search_view
+        SearchView:
+            id: _search_view
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.1
+        TextInput:
+            id: _term
+            on_text_validate: root.search(self.text, root.action_bar.search_view.action_group.text)
+            font_size: '20sp'
+            multiline: False
+    GridLayout:
+        id: _grid
+        cols: self.width / 100
+        padding: [dp(10),0,dp(10),dp(10)]
+        spacing: dp(5)
+    BoxLayout:
+        id: _navigation_bar
+        orientation: 'horizontal'
+        padding: [dp(10),0,dp(10),dp(10)]
+        size_hint: 1, 0.1
+        Button:
+            background_color: [1, 1, 1, 0]
+            border_color: [1,1,1,1]
+            text: u'\uf137'
+            valign: 'middle'
+            font_name: 'data/fonts/fontawesome-webfont.ttf'
+            font_size: '40sp'
+            size_hint: (None, None)
+            size: (40, 40)
+            size: self.texture_size
+            on_release: root.search_previous(root.term.text, root.action_bar.search_view.action_group.text)
+        Label:
+            id: _status
+            text: root.status
+        Button:
+            background_color: [1, 1, 1, 0]
+            border_color: [1,1,1,1]
+            text: u'\uf138'
+            valign: 'middle'
+            font_name: 'data/fonts/fontawesome-webfont.ttf'
+            font_size: '40sp'
+            size_hint: (None, None)
+            size: (40, 40)
+            size: self.texture_size
+            on_release: root.search_next(root.term.text, root.action_bar.search_view.action_group.text)
+
+
+<SearchItemInfo>:
+    app: app
+    box: _box
+    size_hint: 0.5, 0.7
+    title: root.photo['title']
+    BoxLayout:
+        orientation: 'vertical'
+        id: _box
+        AsyncImage:
+            id: _image
+            source: root.thumbnail
+        Button:
+            size_hint_y: 0.1
+            text: _('Add to presentation')
+            size: self.texture_size
+            on_press: root.dismiss()
+            on_release: root.add_to_presentation()
+
+<ProgressDialog@Popup>:
+    title: _('Downloading file...')
+    id: _progress_dialog
+    ProgressBar:
+        max: root.max_value
+
+
+
+
+
