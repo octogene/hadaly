@@ -7,19 +7,20 @@ except ImportError:
     from urllib.parse import urlparse, parse_qs
 import urllib
 from lxml import html
-from os.path import splitext, basename
+
 
 from kivy.uix.boxlayout import BoxLayout
-from kivy.factory import Factory
 from kivy.uix.image import AsyncImage
 from kivy.uix.button import ButtonBehavior, Button
 from kivy.properties import DictProperty, ObjectProperty, StringProperty
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+from kivy.core.window import Window
 from .editor import Slide
 from kivy.logger import Logger
 from kivy.uix.screenmanager import Screen
-from kivy.uix.dropdown import DropDown
+from kivy.metrics import dp
+
 
 
 class SearchScreen(Screen):
@@ -58,9 +59,9 @@ class SearchBox(BoxLayout):
             popup.add_widget(Label(text=_('Please select a search engine.')))
             popup.open()
         elif provider == 'MetMuseum':
-            results = self.app.search_term(term, providers[provider], self.current_page)
+            self.app.search_term(term, providers[provider], self.current_page)
         elif provider == 'Getty OCI':
-            results = self.app.search_term(term, providers[provider], self.current_page)
+            self.app.search_term(term, providers[provider], self.current_page)
 
     def search_next(self, text, provider):
         if self.current_page < self.total_pages:

@@ -24,9 +24,6 @@ from PIL import Image
 import tarfile
 
 from kivy.config import Config
-Config.set('kivy', 'log_level', 'debug')
-Config.set('graphics', 'fullscreen', '0')
-
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.properties import StringProperty, ListProperty, DictProperty, NumericProperty
@@ -499,7 +496,7 @@ class HadalyApp(App):
 
         for photo in results:
             Logger.debug('Search (MET): Loading {url}'.format(url=photo['thumb']))
-            image = ItemButton(photo=photo, source=photo['thumb'], keep_ratio=True, size_hint=(None, None))
+            image = ItemButton(photo=photo, source=photo['thumb'], keep_ratio=True)
             search_screen.box.grid.add_widget(image)
 
         search_screen.box.status = "Page {page} on {total_page}".format(page=search_screen.box.current_page,
