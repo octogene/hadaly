@@ -19,13 +19,6 @@
     "desc":"Time between each autosave in minutes (Not yet functional)", 
     "section":"editor", 
     "key":"autosave_time" },
-    
-  { "type":"bool",
-    "title":"File explorer thumbnail view",
-    "desc":"Activate thumbnail view in file explorer (Can be slow)",
-    "section":"editor",
-    "key":"thumbview",
-    "true":"auto" },
   
   { "type":"title", "title":"Viewer" },
   

@@ -7,9 +7,9 @@ from kivy import require
 require('1.9.0')
 
 import os, json
-from sys import argv, getfilesystemencoding
+from sys import argv
 
-import main
+import __main__
 import urllib
 import re
 
@@ -29,7 +29,6 @@ Config.set('graphics', 'fullscreen', '0')
 
 from kivy.app import App
 from kivy.core.window import Window
-from kivy.metrics import dp
 from kivy.properties import StringProperty, ListProperty, DictProperty, NumericProperty
 from kivy.uix.screenmanager import ScreenManager, SlideTransition, FadeTransition
 from kivy.uix.popup import Popup
@@ -41,12 +40,11 @@ from viewer import SlideBox
 from kivy.logger import Logger
 from kivy.network.urlrequest import UrlRequest
 from hadaly.search import ItemButton
-import kivy.garden.filechooserthumbview
 from kivy.uix.filechooser import FileChooserIconView, FileChooserListView
 
 
 class HadalyApp(App):
-    presentation = DictProperty({'app': ('hadaly', main.__version__), 'title': 'New Title', 'slides': []})
+    presentation = DictProperty({'app': ('hadaly', __main__.__version__), 'title': 'New Title', 'slides': []})
 
     slides_list = ListProperty()
 
@@ -79,7 +77,6 @@ class HadalyApp(App):
         config.set('editor', 'autosave_time', '15')
         config.set('editor', 'autosave', '0')
         config.set('editor', 'font_size', '12')
-        config.set('editor', 'thumbview', '1')
         config.set('viewer', 'thumb', '1')
         config.set('viewer', 'thumb_pos', 'bottom left')
         config.set('viewer', 'font_size', '15')
@@ -151,7 +148,7 @@ class HadalyApp(App):
     def clear(self):
         self.root.current_screen.slides_view.grid_layout.clear_widgets()
         self.root.get_screen('viewer').carousel.clear_widgets()
-        self.presentation = {'app': ('hadaly', main.__version__), 'title': 'New Title', 'slides': []}
+        self.presentation = {'app': ('hadaly', __main__.__version__), 'title': 'New Title', 'slides': []}
         self.filename = self.dirname = ''
 
     def update_presentation(self, type, old_index, new_index):
@@ -193,10 +190,7 @@ class HadalyApp(App):
 
     def show_file_explorer(self):
         popup = Popup(size_hint=(0.8, 0.8))
-        if self.config.getint('editor', 'thumbview') == 1:
-            file_explorer = FileChooserThumbView(filters=['*.jpg', '*.png', '*.jpeg'])
-        else:
-            file_explorer = FileChooserListView(filters=['*.jpg', '*.png', '*.jpeg'])
+        file_explorer = FileChooserListView(filters=['*.jpg', '*.png', '*.jpeg'])
         file_explorer.bind(on_submit=self.show_add_slide)
         file_explorer.popup = popup
         popup.content = file_explorer

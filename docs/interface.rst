@@ -78,7 +78,7 @@ Edit slide
 - Double click on the slide to show the edit dialog.
 
 Show slide informations
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
 
 - Click on |info| to show/hide slide informations.
 

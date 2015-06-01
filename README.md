@@ -3,7 +3,7 @@
 <img align="right" height="200" src="https://github.com/octogene/hadaly/raw/master/docs/_static/logo/logo_2.png"/>
 
 
-This sofware is currently in beta.
+This sofware is currently in alpha.
 
 Hadaly is a presentation software allowing to manipulate slides, in various ways during presentation. The goal is to offer a practical presentation software for art historians or any other individual who wants to have a bit more interaction with their presentations.
 

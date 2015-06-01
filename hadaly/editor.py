@@ -6,40 +6,14 @@ from functools import partial
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
-from kivy.uix.button import ButtonBehavior
-from kivy.uix.image import Image
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty, BooleanProperty
 from kivy.garden.magnet import Magnet
-from kivy.garden.filechooserthumbview import FileChooserThumbView
 from kivy.clock import Clock
 from kivy.logger import Logger
 from kivy.config import Config
-from PIL import Image as ImagePIL
+from PIL import Image
 from kivy.graphics.opengl import GL_MAX_TEXTURE_SIZE, glGetIntegerv
 from kivy.factory import Factory
-
-
-class FileThumbView(BoxLayout):
-    app = ObjectProperty(None)
-
-    def show_thumbnail(self):
-        self.thumb_grid.clear_widgets()
-        s = [item for item in self.file_chooser.files if item.endswith(('.png', '.jpg', '.jpeg'))]
-        for item in s:
-            thumb_src = self.app.create_thumbnail(item)
-            thumb = ThumbnailButton(source=thumb_src.encode('utf-8'),
-                                    keep_ratio=True,
-                                    size_hint=(None, None),
-                                    original_src=item.encode('utf-8'))
-            self.thumb_grid.add_widget(thumb)
-
-
-class ThumbView(FileChooserThumbView):
-    pass
-
-
-class ThumbnailButton(ButtonBehavior, Image):
-    original_src = StringProperty(None)
 
 
 class Slide(BoxLayout):
@@ -63,7 +37,7 @@ class Slide(BoxLayout):
                 }
 
     def update_texture_size(self):
-        im = ImagePIL.open(os.path.join(self.app.tempdir, self.img_src))
+        im = Image.open(os.path.join(self.app.tempdir, self.img_src))
         self.texture_size = im.size
         return im.size
 
@@ -71,11 +45,11 @@ class Slide(BoxLayout):
         Logger.debug('Editor: img_src updated for {title}'.format(title=self.title))
         max_texture_size = glGetIntegerv(GL_MAX_TEXTURE_SIZE)[0]
         try:
-            im = ImagePIL.open(self.img_src)
+            im = Image.open(self.img_src)
             if max(im.size) > max_texture_size:
                 Logger.debug('Application : image too big for max texture size ! Resizing...')
                 size = self.app.resize(im.size, (max_texture_size, max_texture_size))
-                im.thumbnail(size, ImagePIL.ANTIALIAS)
+                im.thumbnail(size, Image.ANTIALIAS)
                 im.save(self.img_src)
         except IOError:
             Logger.debug('Editor: {img_src} is not a valid filename.'.format(img_src=self.img_src))
