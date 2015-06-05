@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, unicode_literals
+from __future__ import division, unicode_literals, absolute_import
 import shutil
 
 from kivy import require
@@ -9,7 +9,7 @@ require('1.9.0')
 import os, json
 from sys import argv
 
-import __main__
+from .meta import version as app_version
 import urllib
 import re
 
@@ -32,16 +32,16 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.factory import Factory
 from kivy.uix.progressbar import ProgressBar
-from editor import Slide, SlideInfoDialog, DraggableSlide
-from viewer import SlideBox
+from .editor import Slide, SlideInfoDialog, DraggableSlide
+from .viewer import SlideBox
 from kivy.logger import Logger
 from kivy.network.urlrequest import UrlRequest
-from hadaly.search import ItemButton
+from .search import ItemButton
 from kivy.uix.filechooser import FileChooserIconView, FileChooserListView
 
 
 class HadalyApp(App):
-    presentation = DictProperty({'app': ('hadaly', __main__.__version__), 'title': 'New Title', 'slides': []})
+    presentation = DictProperty({'app': ('hadaly', app_version), 'title': 'New Title', 'slides': []})
 
     slides_list = ListProperty()
 

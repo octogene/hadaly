@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-__version__ = '0.1a'
-
+from __future__ import absolute_import
+import os, sys
 
 def main(args=None):
-    from app import HadalyApp
+    from .app import HadalyApp
     import locale
     import gettext
 
     current_locale, encoding = locale.getdefaultlocale()
-    language = gettext.translation('hadaly', 'data/locales/',
-                                   [current_locale], fallback=True)
+    abspath = os.path.abspath(os.path.dirname(sys.argv[0]))
+    langpath = abspath + '/data/locales/'
+    language = gettext.translation('hadaly', langpath,
+                                   [current_locale])
     language.install()
-
     HadalyApp().run()
 
 

@@ -25,16 +25,14 @@ Requirements
     ::
 
         pip install kivy-garden
-
         garden install magnet
-        garden install filechooserthumbview
 
-For now, no setup or binary are available, you have to clone the repository:
 
 ::
 
     git clone https://github.com/octogene/hadaly.git
-
+    cd hadaly
+    python setup.py install
 
 Windows
 ~~~~~~~
