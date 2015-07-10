@@ -6,6 +6,7 @@ import os, sys
 def main(args=None):
     from .app import HadalyApp
     from kivy.utils import platform
+    from kivy.logger import Logger
     import locale
     import gettext
 
@@ -16,7 +17,6 @@ def main(args=None):
             pass
 
         try:
-            Logger.debug('Application: {e}'.format(e=platform()))
             current_locale, encoding = locale.getdefaultlocale()
             language = gettext.translation('hadaly', 'data/locales/',[current_locale], fallback=True)
         except Exception, e:

@@ -7,7 +7,7 @@ from functools import partial
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty, BooleanProperty
-from kivy.garden.magnet import Magnet
+from .magnet import Magnet
 from kivy.clock import Clock
 from kivy.logger import Logger
 from kivy.config import Config
