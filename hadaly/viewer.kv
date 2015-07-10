@@ -15,6 +15,28 @@
             id: _carousel
             direction: 'right'
             loop: False
+    TouchActionArea:
+        app: app
+        Widget:
+            name: 'ltop'
+            size_hint: 0.4,0.3
+            pos_hint: {'top': 1}
+        Widget:
+            name: 'lbottom'
+            size_hint: 0.4,0.3
+            pos_hint: {'bottom': 1}
+        Widget:
+            name: 'rtop'
+            size_hint: 0.4,0.3
+            pos_hint: {'top': 1, 'right': 1}
+        Widget:
+            name: 'rbottom'
+            size_hint: 0.4,0.3
+            pos_hint: {'bottom': 1, 'right': 1}
+        Widget:
+            name: 'center'
+            size_hint: 0.5,0.4
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
 <ImgFullZoom>:
     pos_hint: 0, 0
