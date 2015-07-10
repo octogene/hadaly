@@ -6,6 +6,7 @@ from kivy.uix.scatter import Matrix
 from kivy.uix.scatterlayout import ScatterLayout
 from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.stencilview import StencilView
 from kivy.uix.popup import Popup
 from kivy.uix.button import ButtonBehavior
@@ -21,49 +22,6 @@ from kivy.uix.colorpicker import ColorPicker
 class ViewerScreen(Screen):
     app = ObjectProperty(None)
     dialog = ObjectProperty(None)
-
-    def on_touch_down(self, touch, *args):
-        bottom_right_corner = [(dp(self.size[0]) - dp(200), dp(200)), (dp(self.size[0]), 0)]
-        top_left_corner = [(0, dp(self.size[1])), (dp(200), dp(self.size[1]) - dp(200))]
-        top_right_corner = [(dp(self.size[0]) - dp(200), dp(self.size[1])), (dp(self.size[0]), dp(self.size[1]) - dp(200))]
-        center = [(dp(200), dp(200)), (dp(self.size[0]) - dp(200), dp(self.size[1]) - dp(200))]
-        if self.collide_point(*touch.pos):
-
-            if Vector.in_bbox(touch.pos, bottom_right_corner[0], bottom_right_corner[1]) \
-                    and touch.is_double_tap and len(self.app.presentation['slides']) > 0:
-
-                self.dialog.to_switch = True
-                self.dialog.title = _('Switch to...')
-                self.dialog.open()
-                return False
-
-            elif Vector.in_bbox(touch.pos, top_left_corner[0], top_left_corner[1]) \
-                    and touch.is_double_tap:
-
-                self.app.root.current = 'editor'
-                return True
-
-            elif Vector.in_bbox(touch.pos, top_right_corner[0], top_right_corner[1]) \
-                    and touch.is_double_tap and len(self.app.presentation['slides']) > 0:
-
-                # TODO: Switch to toolbox mode.
-                return False
-
-            elif Vector.in_bbox(touch.pos, center[0], center[1]) \
-                    and touch.is_double_tap and len(self.app.presentation['slides']) > 0:
-
-                if len(self.box.children) < 2:
-                    Logger.info('Application: Switching to compare mode.')
-                    self.dialog.to_switch = False
-                    self.dialog.title = _('Compare to...')
-                    self.dialog.open()
-                else:
-                    self.app.compare_slide(action='rm')
-                    touch.ungrab(self)
-
-                return True
-
-        return super(ViewerScreen, self).on_touch_down(touch)
 
     def on_pre_enter(self, *args):
         if not self.dialog:
@@ -95,6 +53,41 @@ class ViewerScreen(Screen):
             image = SlideBox(slide=slide)
             self.carousel.add_widget(image)
 
+class TouchActionArea(FloatLayout):
+
+    def on_touch_down(self, touch):
+
+        if self.collide_point(*touch.pos) and touch.is_double_tap and len(self.app.presentation['slides']) > 0:
+            try:
+                child = [child for child in self.children if child.collide_point(*touch.pos)][0]
+            except IndexError:
+                Logger.debug('Viewer: No TouchActionArea child touched.')
+                return
+            if child.name == 'center':
+                if len(self.app.root.current_screen.box.children) < 2:
+                        Logger.info('Application: Switching to compare mode.')
+                        self.parent.dialog.to_switch = False
+                        self.parent.dialog.title = _('Compare to...')
+                        self.parent.dialog.open()
+                else:
+                    self.app.compare_slide(action='rm')
+                    touch.ungrab(self)
+                return True
+
+            elif child.name == 'ltop':
+                self.app.root.current = 'editor'
+                return True
+            elif child.name == 'rtop':
+                pass
+            elif child.name == 'lbottom':
+                pass
+            elif child.name == 'rbottom':
+                self.parent.dialog.to_switch = True
+                self.parent.dialog.title = _('Switch to...')
+                self.parent.dialog.open()
+                return False
+
+        return super(TouchActionArea, self).on_touch_down(touch)
 
 class SlideBox(BoxLayout, StencilView):
     slide = DictProperty(None)
@@ -115,10 +108,12 @@ class SlideBox(BoxLayout, StencilView):
 
     def on_size(self, *args):
 
-        for child in self.float_layout.children:
-            if child.id == 'img_zoom':
-                child.size = (self.size[0] / 6, (self.size[0] / 6) / child.image_ratio)
-                child.pos = [self.pos[0], 0.05 * dp(self.size[1])]
+        try:
+            img_zoom = [child for child in self.float_layout.children if child.id == 'img_zoom'][0]
+            img_zoom.size = (self.size[0] / 6, (self.size[0] / 6) / img_zoom.image_ratio)
+            img_zoom.pos = [self.pos[0], 0.05 * dp(self.size[1])]
+        except IndexError:
+            pass
 
     def get_caption(self):
 
@@ -185,9 +180,11 @@ class SlideViewer(ScatterLayout):
                     self.parent.add_widget(thumb)
 
             elif min(self.bbox[0]) > 0:
-                for child in self.parent.children:
-                    if child.id == 'img_zoom':
-                        self.parent.remove_widget(child)
+                img_zoom = [child for child in self.parent.children if child.id == 'img_zoom']
+                try:
+                    self.parent.remove_widget(img_zoom[0])
+                except IndexError:
+                    pass
 
     def lock(self):
         if not self.locked:
