@@ -68,17 +68,19 @@
             on_release: action_group._dropdown.select(app.stop())
 
 <SlidesView@FloatLayout>:
+    app: app
     grid_layout: _grid_layout
     BoxLayout:
         padding: [dp(20), dp(20), dp(20), dp(20)]
         GridLayout:
             spacing: dp(20)
-            cols: 8
+            cols: app.config.getint('editor', 'cols')
             id: _grid_layout
 
 <DraggableSlide>:
+    ncols: app.config.getint('editor', 'cols')
     size_hint: None, None
-    size: [dp(win.Window.width / 8 - 20 - 20/8)] * 2
+    size: [dp(win.Window.width / self.ncols - 20 - 20/self.ncols)] * 2
 
 <Slide>:
     app: app

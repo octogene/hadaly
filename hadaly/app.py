@@ -74,6 +74,8 @@ class HadalyApp(App):
         config.set('editor', 'autosave_time', '15')
         config.set('editor', 'autosave', '0')
         config.set('editor', 'font_size', '12')
+        config.set('editor', 'last_dir', None)
+        config.set('editor', 'cols', '6')
         config.set('viewer', 'thumb', '1')
         config.set('viewer', 'thumb_pos', 'bottom left')
         config.set('viewer', 'font_size', '15')
@@ -83,7 +85,7 @@ class HadalyApp(App):
     def build_settings(self, settings):
         settings.add_json_panel('Hadaly',
                                 self.config,
-                                'data/settings_panel.json')
+                                'hadaly/data/settings_panel.json')
 
     def on_start(self):
         self.tempdir = tempfile.mkdtemp()
@@ -145,7 +147,7 @@ class HadalyApp(App):
     def clear(self):
         self.root.current_screen.slides_view.grid_layout.clear_widgets()
         self.root.get_screen('viewer').carousel.clear_widgets()
-        self.presentation = {'app': ('hadaly', __main__.__version__), 'title': 'New Title', 'slides': []}
+        self.presentation = {'app': ('hadaly', app_version), 'title': 'New Title', 'slides': []}
         self.filename = self.dirname = ''
 
     def update_presentation(self, type, old_index, new_index):
@@ -188,6 +190,8 @@ class HadalyApp(App):
     def show_file_explorer(self):
         popup = Popup(size_hint=(0.8, 0.8))
         file_explorer = FileChooserListView(filters=['*.jpg', '*.png', '*.jpeg'])
+        if os.path.exists(self.config.get('editor', 'last_dir')):
+            file_explorer.path = self.config.get('editor', 'last_dir')
         file_explorer.bind(on_submit=self.show_add_slide)
         file_explorer.popup = popup
         popup.content = file_explorer
@@ -295,6 +299,7 @@ class HadalyApp(App):
         :param img_source: image path as string.
         """
         original_src.popup.dismiss()
+        self.config.set('editor', 'last_dir', os.path.dirname(original_src.selection[0]))
         thumb_src = self.create_thumbnail(original_src.selection[0])
         slide_popup = SlideInfoDialog(slide=Slide(img_src=original_src.selection[0],
                                                   thumb_src=thumb_src,
@@ -503,6 +508,7 @@ class HadalyApp(App):
                                                                         total_page=search_screen.box.total_pages)
 
     def on_stop(self):
+        self.config.set('editor', 'last_dir', None)
         try:
             shutil.rmtree(self.tempdir, ignore_errors=True)
         except:

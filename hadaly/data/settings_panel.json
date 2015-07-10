@@ -6,6 +6,12 @@
     "desc":"Size of font for slide label", 
     "section":"editor", 
     "key":"font_size" },
+    
+  { "type":"numeric",
+    "title":"Columns", 
+    "desc":"Number of columns", 
+    "section":"editor", 
+    "key":"cols" },
   
   { "type":"bool",
     "title":"Auto-save",
