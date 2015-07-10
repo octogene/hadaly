@@ -14,16 +14,11 @@ def main(args=None):
         try:
             from jnius import autoclass
         except ImportError:
-            pass
+            Logger.debug('Application: Unable to import jnius.')
 
-        try:
-            current_locale, encoding = locale.getdefaultlocale()
-            language = gettext.translation('hadaly', 'data/locales/',[current_locale], fallback=True)
-        except Exception, e:
-            Logger.debug('Application : {e}'.format(e=e))
-            current_locale = autoclass(str('java.util.Locale')).getDefault().toString()
-            Logger.debug('hadaly {locale}'.format(locale=current_locale))
-            language = gettext.translation('hadaly', 'data/locales/',[current_locale], fallback=True)
+        current_locale = autoclass(str('java.util.Locale')).getDefault().toString()
+        Logger.debug('hadaly {locale}'.format(locale=current_locale))
+        language = gettext.translation('hadaly', 'hadaly/data/locales/',[current_locale], fallback=True)
 
     else:
         current_locale, encoding = locale.getdefaultlocale()
