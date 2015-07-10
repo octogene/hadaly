@@ -41,7 +41,7 @@ class SearchBox(BoxLayout):
         providers = {'MetMuseum': 'met',
                      'Getty OCI': 'getty'}
         if not term:
-            popup = Popup(title=_('Error'), size_hint=(0.3, 0.2))
+            popup = Popup(title=_('Error'), size_hint=(0.45, 0.2))
             popup.add_widget(Label(text=_('Please enter a search term.')))
             popup.open()
             return
@@ -55,7 +55,7 @@ class SearchBox(BoxLayout):
                 image = ItemButton(photo=photo, source=photo['thumb'], keep_ratio=True, size_hint=(None, None))
                 self.grid.add_widget(image)
         elif provider == _('Select a search engine'):
-            popup = Popup(title=_('Error'), size_hint=(0.3, 0.2))
+            popup = Popup(title=_('Error'), size_hint=(0.45, 0.2))
             popup.add_widget(Label(text=_('Please select a search engine.')))
             popup.open()
         elif provider == 'MetMuseum':
