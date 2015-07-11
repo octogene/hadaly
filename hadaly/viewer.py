@@ -111,9 +111,9 @@ class SlideBox(BoxLayout, StencilView):
         try:
             img_zoom = [child for child in self.float_layout.children if child.id == 'img_zoom'][0]
             img_zoom.size = (self.size[0] / 6, (self.size[0] / 6) / img_zoom.image_ratio)
-            img_zoom.pos = [self.pos[0], 0.05 * dp(self.size[1])]
+            img_zoom.pos = [self.toolbar.pos[0], self.parent.height / 15]
         except IndexError:
-            pass
+            Logger.debug('Application: No img_zoom to resize.')
 
     def get_caption(self):
 
@@ -124,7 +124,6 @@ class SlideBox(BoxLayout, StencilView):
         caption = ' - '.join((artist, title, year))
 
         return caption
-
 
 class SlideViewer(ScatterLayout):
     image = ObjectProperty(None)
@@ -174,17 +173,17 @@ class SlideViewer(ScatterLayout):
                                   id='img_zoom',
                                   size_hint=(None, None),
                                   keep_ratio=True,
-                                  size=(self.parent.size[0] / 5,
-                                        (self.parent.size[0] / 5) / self.image.image_ratio),
-                                  pos=[0, 0.05 * self.parent.size[1]])
+                                  size=(self.parent.size[0] / 6,
+                                       (self.parent.size[0] / 6) / self.image.image_ratio),
+                                  pos=[self.parent.parent.toolbar.pos[0], self.parent.height / 15])
                     self.parent.add_widget(thumb)
 
             elif min(self.bbox[0]) > 0:
-                img_zoom = [child for child in self.parent.children if child.id == 'img_zoom']
                 try:
-                    self.parent.remove_widget(img_zoom[0])
+                    img_zoom = [child for child in self.parent.children if child.id == 'img_zoom'][0]
+                    self.parent.remove_widget(img_zoom)
                 except IndexError:
-                    pass
+                    Logger.debug('Application: No img_zoom to remove.')
 
     def lock(self):
         if not self.locked:

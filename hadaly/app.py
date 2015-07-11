@@ -23,6 +23,7 @@ import tempfile
 from PIL import Image
 import tarfile
 
+
 from kivy.config import Config
 from kivy.app import App
 from kivy.core.window import Window
@@ -296,7 +297,7 @@ class HadalyApp(App):
     def show_add_slide(self, original_src, *args):
         """Show dialog to add a slide.
 
-        :param img_source: image path as string.
+        :param original_src: image path as string.
         """
         original_src.popup.dismiss()
         self.config.set('editor', 'last_dir', os.path.dirname(original_src.selection[0]))

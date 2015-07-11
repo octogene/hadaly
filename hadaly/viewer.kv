@@ -38,20 +38,20 @@
             size_hint: 0.5,0.4
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-<ImgFullZoom>:
+<ImgFullZoom@Image>:
     pos_hint: 0, 0
     size: 200, 200
     size_hint: None, None
     keep_ratio: True
     allow_stretch: False
-    id: _img_zoom
+    id: img_zoom
 
 <SlidesDialog>:
     grid: _grid
     size_hint: 0.6, 0.6
     GridLayout:
         id: _grid
-        cols: 6
+        cols: 5
         padding: [5,5,5,5]
         spacing: dp(5)
         dialog: root
@@ -126,9 +126,9 @@
                     border_color: [1,1,1,1]
                     text: u'\uf13e'
                     font_name: 'data/fonts/fontawesome-webfont.ttf'
-                    font_size: '30sp'
+                    font_size: str(win.Window.height / 20) + 'sp'
                     size_hint: (None, None)
-                    size: (30, 30)
+                    size: (dp(win.Window.height / 20), dp(win.Window.height / 20))
                     on_press: root.viewer.lock()
 
 <ViewSlideLabel@Label>:
@@ -151,16 +151,17 @@
     color_picker: _color_picker
     thickness: _slider.value
     size_hint: None, None
-    size: (200, 40)
+    size: (win.Window.width / 4, win.Window.height / 15)
+    on_size: self.size = (win.Window.width / 4, win.Window.height / 15)
     spacing: dp(3)
     Button:
         background_color: [1, 1, 1, 0]
         border_color: [1,1,1,1]
         text: u'\uf12d'
         font_name: 'data/fonts/fontawesome-webfont.ttf'
-        font_size: '30sp'
+        font_size: str(win.Window.height / 20) + 'sp'
         size_hint: (None, None)
-        size: (dp(30), dp(30))
+        size: (dp(win.Window.height / 20), dp(win.Window.height / 20))
         on_press: root.painter.canvas.clear()
     Button:
         id: _color_picker
@@ -169,9 +170,10 @@
         text: u'\uf111'
         color: root.paint_color
         font_name: 'data/fonts/fontawesome-webfont.ttf'
-        font_size: '30sp'
+        font_size: str(win.Window.height / 20) + 'sp'
         size_hint: (None, None)
-        size: (dp(30), dp(30))
+        size: (dp(win.Window.height / 20), dp(win.Window.height / 20))
+#        on_size: self.size = (dp(win.Window.height / 20), dp(win.Window.height / 20))
         on_press: root.show_color_picker()
     Slider:
         id: _slider
