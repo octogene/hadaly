@@ -42,7 +42,7 @@ from kivy.uix.filechooser import FileChooserIconView, FileChooserListView
 
 
 class HadalyApp(App):
-    presentation = DictProperty({'app': ('hadaly', app_version), 'title': 'New Title', 'slides': []})
+    presentation = DictProperty({'app': ('hadaly', app_version), 'title': '', 'slides': []})
 
     slides_list = ListProperty()
 
@@ -90,7 +90,7 @@ class HadalyApp(App):
 
     def on_start(self):
         self.tempdir = tempfile.mkdtemp()
-
+        self.presentation['title'] = _('New Title')
         try:
             if argv[1].endswith('.opah'):
                 self.load_slides(os.path.dirname(argv[1]), [os.path.basename(argv[1])])
@@ -148,7 +148,7 @@ class HadalyApp(App):
     def clear(self):
         self.root.current_screen.slides_view.grid_layout.clear_widgets()
         self.root.get_screen('viewer').carousel.clear_widgets()
-        self.presentation = {'app': ('hadaly', app_version), 'title': 'New Title', 'slides': []}
+        self.presentation = {'app': ('hadaly', app_version), 'title': _('New Title'), 'slides': []}
         self.filename = self.dirname = ''
 
     def update_presentation(self, type, old_index, new_index):
@@ -370,7 +370,7 @@ class HadalyApp(App):
 
     def download_img(self, url, slide, wait=False):
         pb = ProgressBar(id='_pb')
-        self.progress_dialog = Popup(title='Downloading...',
+        self.progress_dialog = Popup(title=_('Downloading...'),
                                      size_hint=(0.5, 0.2), content=pb, auto_dismiss=False)
         url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
         path = os.path.join(self.tempdir,
