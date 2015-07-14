@@ -341,6 +341,12 @@ class HadalyApp(App):
         popup.content = Label(text=msg, id='label')
         popup.open()
 
+    def switch_to_viewer(self):
+        if not self.presentation['slides']:
+            self.show_popup(_('Error'), _('Presentation is empty...\n Please add a slide first.'))
+        else:
+            self.root.current = 'viewer'
+
     def search_flickr(self, term):
         """make a search request on flickr and return results
 

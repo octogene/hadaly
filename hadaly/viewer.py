@@ -171,7 +171,7 @@ class SlideViewer(ScatterLayout):
 
                 if all(child.id != 'img_zoom' for child in self.parent.children):
                     # TODO: Change thumbnail position and size based on config.
-                    thumb = Image(source=self.image.source,
+                    thumb = Image(source=self.parent.parent.slide['thumb_src'],
                                   id='img_zoom',
                                   size_hint=(None, None),
                                   keep_ratio=True,
