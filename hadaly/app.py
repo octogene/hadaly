@@ -530,6 +530,7 @@ class Manager(ScreenManager):
         Window.bind(on_key_down=self._on_keyboard_down)
 
     def _on_keyboard_down(self, instance, key, scancode, codepoint, modifier, **kwargs):
+        print(key)
         if key == 275 and self.current == 'viewer':
             self.get_screen('viewer').carousel.load_next(mode='next')
         elif key == 276 and self.current == 'viewer':
@@ -538,3 +539,9 @@ class Manager(ScreenManager):
             self.get_screen('viewer').carousel.current_slide.viewer.lock()
         elif key == 100 and modifier == ['ctrl'] and self.current == 'viewer':
             self.get_screen('viewer').carousel.current_slide.viewer.painter.canvas.clear()
+        elif key == 9 and self.current == 'viewer':
+            self.get_screen('viewer').dialog.to_switch = True
+            self.get_screen('viewer').dialog.title = _('Switch to...')
+            self.get_screen('viewer').dialog.open()
+
+

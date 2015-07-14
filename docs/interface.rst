@@ -280,3 +280,4 @@ Shortcuts
 - ``Ctrl-d`` : Delete drawings.
 - ``Left`` : Go to previous slide.
 - ``Right`` : Go to next slide.
+- ``Tab`` : Fast slide switching.

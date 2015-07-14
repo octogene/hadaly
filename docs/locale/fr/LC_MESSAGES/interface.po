@@ -5,15 +5,15 @@ msgstr ""
 "Project-Id-Version: Hadaly 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-31 05:25+0200\n"
-"PO-Revision-Date: 2015-06-01 16:42+0200\n"
+"PO-Revision-Date: 2015-07-14 22:47+0100\n"
 "Last-Translator: Bogdan 'Octogene' Cordier <ooctogene@gmail.com>\n"
 "Language-Team: French <>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 2.0\n"
 
 #: ../../interface.rst:18
 msgid "Interface"
@@ -84,8 +84,8 @@ msgid ""
 "Left click on slide, drag it on a corner of the screen and drop it, it "
 "should be removed from presentation."
 msgstr ""
-"En maintenant un clic gauche sur la diapo, déplacez là sur un bord de l'écran "
-"et relâchez, elle devrait être supprimée de la présentation. "
+"En maintenant un clic gauche sur la diapo, déplacez là sur un bord de "
+"l'écran et relâchez, elle devrait être supprimée de la présentation. "
 
 #: ../../interface.rst:91
 msgid "Re-order slides"
@@ -138,8 +138,8 @@ msgid ""
 "slightly better image (depending on the source)."
 msgstr ""
 "Cliquez sur l'image que vous souhaitez ajouter pour faire apparaître une "
-"fenêtre montrant l'image avec une qualité légèrement supérieure (en fonction "
-"de la source)."
+"fenêtre montrant l'image avec une qualité légèrement supérieure (en fonction"
+" de la source)."
 
 #: ../../interface.rst:136
 msgid "Click on `Add to presentation` to begin download."
@@ -216,7 +216,8 @@ msgstr "Passer à la diapo 'x' :"
 #: ../../interface.rst:199
 msgid "Double click on bottom right corner of the screen and select slide:"
 msgstr ""
-"Double clic sur le coin inférieur droit de l'écran et sélectionnez la diapo :"
+"Double clic sur le coin inférieur droit de l'écran et sélectionnez la diapo "
+":"
 
 #: ../../interface.rst:207
 msgid "Compare current slide with another one:"
@@ -277,8 +278,8 @@ msgid ""
 "Move the slider of the toolbar to the right to increase line size (Mouse "
 "wheel also works)."
 msgstr ""
-"Déplacez le curseur de la barre d'outil à droite pour augmenter la taille du "
-"trait (La molette fonctionne aussi)."
+"Déplacez le curseur de la barre d'outil à droite pour augmenter la taille du"
+" trait (La molette fonctionne aussi)."
 
 #: ../../interface.rst:266
 msgid "Options"
@@ -313,8 +314,8 @@ msgid ""
 "'New title' : Show/Configure presentation title (`see <#edit-presentation-"
 "title>`_)"
 msgstr ""
-"'Nouveau titre' : Montre/Configure le titre de la présentation (`voir <"
-"#edit-presentation-title>`_)"
+"'Nouveau titre' : Montre/Configure le titre de la présentation (`voir "
+"<#edit-presentation-title>`_)"
 
 #: ../../interface.rst:35
 msgid "|plus| : Add slide to presentation. ( `see <#add-new-slide>`_)"
@@ -368,4 +369,7 @@ msgstr "Pour effacer les dessins, cliquez sur |eraser|."
 msgid "Click on |circle| to show the color picker"
 msgstr "Cliquez sur |circle| pour afficher le sélectionneur de couleur."
 
+#: ../../interface.rst:283
+msgid "``Tab`` : Fast slide switching."
+msgstr "``Tab`` : Changement rapide de diapo."
 

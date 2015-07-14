@@ -34,7 +34,6 @@ class ViewerScreen(Screen):
 
                 for slide in reversed(self.app.presentation['slides']):
                     self.dialog.grid.add_widget(Factory.SlideButton(source=slide['thumb_src'],
-                                                                    size_hint=(None, None),
                                                                     keep_ratio=True, ))
                     image = SlideBox(slide=slide)
                     self.carousel.add_widget(image)
@@ -48,7 +47,6 @@ class ViewerScreen(Screen):
         self.carousel.clear_widgets()
         for slide in reversed(self.app.presentation['slides']):
             self.dialog.grid.add_widget(Factory.SlideButton(source=slide['thumb_src'],
-                                                            size_hint=(None, None),
                                                             keep_ratio=True, ))
             image = SlideBox(slide=slide)
             self.carousel.add_widget(image)
