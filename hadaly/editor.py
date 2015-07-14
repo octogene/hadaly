@@ -47,7 +47,7 @@ class Slide(BoxLayout):
         try:
             im = Image.open(self.img_src)
             if max(im.size) > max_texture_size:
-                Logger.debug('Application : image too big for max texture size ! Resizing...')
+                Logger.debug('Editor : image too big for max texture size ! Resizing...')
                 size = self.app.resize(im.size, (max_texture_size, max_texture_size))
                 im.thumbnail(size, Image.ANTIALIAS)
                 im.save(self.img_src)
@@ -60,11 +60,22 @@ class Slide(BoxLayout):
             self.remove_widget(self.children[0])
         elif not self.info_panel:
             self.info_panel = True
+
             info_panel = Factory.SlideInfo(id='info_panel')
+            info_panel.font = ''.join((unicode(int(self.parent.height / 14)), 'sp'))
             info_panel.artist.text = self.artist
             info_panel.title.text = self.title
             info_panel.year.text = self.year
             self.add_widget(info_panel)
+
+    def on_size(self, *args):
+        try:
+            info_panel = [child for child in self.children if child.id == 'info_panel'][0]
+            info_panel.font = ''.join((unicode(int(self.parent.height / 14)), 'sp'))
+        except IndexError:
+            Logger.debug('Editor: No child with "info_panel" id found.')
+
+
 
 
 class SlideInfoDialog(Popup):
@@ -106,7 +117,7 @@ class DraggableSlide(Magnet):
             Clock.unschedule(touch.ud['event'])
         except KeyError:
             Logger.exception(
-                'Application: Touch up passed through and unscheduled clock event could not be unscheduled. A bug...')
+                'Editor: Touch up passed through and unscheduled clock event could not be unscheduled. A bug...')
 
     def on_touch_down(self, touch, *args):
         if self.collide_point(*touch.pos):

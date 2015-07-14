@@ -80,14 +80,14 @@
 <DraggableSlide>:
     ncols: app.config.getint('editor', 'cols')
     size_hint: None, None
-    size: [dp(win.Window.width / self.ncols - 20 - 20/self.ncols)] * 2
+    size: [dp(int(win.Window.width / self.ncols) - 20 - int(20/self.ncols))] * 2
 
 <Slide>:
     app: app
     orientation:'vertical'
     size_hint: None, None
     padding: [dp(10), dp(10), dp(10), 0]
-    spacing: dp(2)
+    spacing: dp(3)
     image: _image
     canvas.before:
         Color:
@@ -101,37 +101,41 @@
         keep_ratio: True
         mipmap: True
     Button:
-        size_hint: 0.2, 0.2
+        size_hint: 0.15, 0.25
         text: u'\uf05a'
         text_size: self.size
         font_name: 'data/fonts/fontawesome-webfont.ttf'
-        font_size: '20sp'
-        halign: 'left'
+        font_size: ''.join((unicode(int(root.width / 8)), 'sp'))
+        halign: 'center'
         valign: 'middle'
         background_color: [1, 1, 1, 0]
         border_color: [1,1,1,1]
         on_press: root.show_info_panel()
 
 
-
 <SlideInfo@BoxLayout>:
     artist: _artist
     title: _title
     year: _year
+    font: '10sp'
     orientation:'vertical'
-    size_hint: 1, 0.4
+    size_hint: 1, 0.45
     SlideLabel:
         id: _artist
+        font_size: root.font
     SlideLabel:
         id: _title
         italic: True
+        font_size: root.font
     SlideLabel:
         id: _year
+        font_size: root.font
+
 
 <SlideLabel@Label>:
-    font_size: app.config.getint('editor','font_size')
-    text_size: self.parent.width, self.height
-    size: self.parent.size
+    text_size: self.width, None
+    size_hint_y: None
+    height: self.texture_size[1]
     shorten: True
     shorten_from: 'right'
     halign: 'left'

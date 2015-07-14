@@ -65,6 +65,7 @@
     float_layout: _float_layout
     toolbar: _toolbar
     painter: _painter
+    gui_layout: _gui_layout
     FloatLayout:
         id: _float_layout
         viewer: _viewer
@@ -92,10 +93,13 @@
 
         AnchorLayout:
             id: _gui_layout
+            slide_info: _slide_info
             anchor_x:'right'
             anchor_y: app.config.get('viewer', 'caption_pos')
             pos: self.parent.pos
             BoxLayout:
+                id: _slide_info
+                font: '12sp'
                 canvas.before:
                     Color:
                         rgba: (0, 0, 0, 1)
@@ -103,7 +107,7 @@
                         pos: self.pos
                         size: self.size
                 orientation:'vertical'
-                size_hint: 0.35, 0.1
+                size_hint: 0.35, 0.12
                 padding: [5, 5, 5, 5]
                 ViewSlideLabel:
                     id: _caption_artist
@@ -132,9 +136,10 @@
                     on_press: root.viewer.lock()
 
 <ViewSlideLabel@Label>:
-    font_size: app.config.getint('viewer', 'font_size')
-    text_size: self.width, self.height
-    size: self.parent.width, self.texture_size[1]
+    font_size: self.parent.font
+    text_size: self.width, None
+    size_hint_y: None
+    height: self.texture_size[1]
     shorten: True
     shorten_from: 'right'
     halign: 'center'

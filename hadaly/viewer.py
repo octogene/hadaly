@@ -28,7 +28,7 @@ class ViewerScreen(Screen):
             self.dialog = Factory.SlidesDialog()
         try:
             if not len(self.dialog.grid.children) == len(self.app.presentation['slides']):
-                Logger.debug('Application: Clean \& reload carousel.')
+                Logger.debug('Viewer: Clean \& reload carousel.')
                 self.dialog.grid.clear_widgets()
                 self.carousel.clear_widgets()
 
@@ -41,7 +41,7 @@ class ViewerScreen(Screen):
 
 
         except KeyError as msg:
-            Logger.debug('Application: Presentations seems empty. {msg}'.format(msg=msg))
+            Logger.debug('Viewer: Presentations seems empty. {msg}'.format(msg=msg))
 
     def update_carousel(self):
         self.dialog.grid.clear_widgets()
@@ -65,7 +65,7 @@ class TouchActionArea(FloatLayout):
                 return
             if child.name == 'center':
                 if len(self.app.root.current_screen.box.children) < 2:
-                        Logger.info('Application: Switching to compare mode.')
+                        Logger.info('Viewer: Switching to compare mode.')
                         self.parent.dialog.to_switch = False
                         self.parent.dialog.title = _('Compare to...')
                         self.parent.dialog.open()
@@ -113,7 +113,9 @@ class SlideBox(BoxLayout, StencilView):
             img_zoom.size = (self.size[0] / 6, (self.size[0] / 6) / img_zoom.image_ratio)
             img_zoom.pos = [self.toolbar.pos[0], self.parent.height / 15]
         except IndexError:
-            Logger.debug('Application: No img_zoom to resize.')
+            Logger.debug('Viewer: No img_zoom to resize.')
+
+        self.gui_layout.slide_info.font = ''.join((unicode(int(self.height / 35)), 'sp'))
 
     def get_caption(self):
 
@@ -183,11 +185,11 @@ class SlideViewer(ScatterLayout):
                     img_zoom = [child for child in self.parent.children if child.id == 'img_zoom'][0]
                     self.parent.remove_widget(img_zoom)
                 except IndexError:
-                    Logger.debug('Application: No img_zoom to remove.')
+                    Logger.debug('Viewer: No img_zoom to remove.')
 
     def lock(self):
         if not self.locked:
-            Logger.info('Application: Locking Slide.')
+            Logger.info('Viewer: Locking Slide.')
             self.locked = True
             self.do_rotation = False
             self.do_scale = False
@@ -197,7 +199,7 @@ class SlideViewer(ScatterLayout):
                                                                 'color']))
             self.app.root.get_screen('viewer').carousel.scroll_timeout = 50
         elif self.locked:
-            Logger.info('Application: Unlocking Slide.')
+            Logger.info('Viewer: Unlocking Slide.')
             self.locked = False
             self.do_scale = True
             self.do_translation = True

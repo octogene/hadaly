@@ -134,8 +134,8 @@ class HadalyApp(App):
                 self.presentation['slides'][index]['thumb_src'] = thumb_src
                 self.presentation['slides'][index]['img_src'] = img_src
 
-                img_slide = Factory.Slide(img_src=str(img_src),
-                                          thumb_src=str(thumb_src),
+                img_slide = Factory.Slide(img_src=img_src,
+                                          thumb_src=thumb_src,
                                           artist=slide['artist'],
                                           title=slide['title'],
                                           year=slide['year']
