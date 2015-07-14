@@ -5,9 +5,9 @@
 
 This sofware is currently in alpha.
 
-Hadaly is a presentation software allowing to manipulate slides, in various ways during presentation. The goal is to offer a practical presentation software for art historians or any other individual who wants to have a bit more interaction with their presentations.
+Hadaly is an interactive presentation software. It allows to manipulate slides in various ways during presentation. The goal is to offer a practical presentation software for art historians or any art enthusiasts.
 
-It contains a presentation editor and a viewer. The editor allows you to build presentations by creating slides from pictures and by adding information about them (e.g: artist, title and year). And, well, the viewer allows you to show and manipulate the slides.
+It contains an editor, viewer and a search engine. The editor allows you to build presentations by creating slides which are a combination of an image and informations (e.g: artist, title and year). The viewer allows you to show and manipulate the slides. The search engine allows you create slides from different online sources.
 
 Presentations are saved as \*.opah files which contains all the slides image files and their metadata (JSON).
 

@@ -19,15 +19,6 @@ Requirements
 
         pip install lxml Pillow kivy
 
-- kivy.garden.magnet
-- kivy.garden.filechooserthumbview
-
-    ::
-
-        pip install kivy-garden
-        garden install magnet
-
-
 ::
 
     git clone https://github.com/octogene/hadaly.git

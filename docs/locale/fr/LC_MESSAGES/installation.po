@@ -8,10 +8,10 @@ msgstr ""
 "PO-Revision-Date: 2015-06-01 15:56+0200\n"
 "Last-Translator: Bogdan 'Octogene' Cordier <ooctogene@gmail.com>\n"
 "Language-Team: French <>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Lokalize 1.5\n"
 
@@ -49,32 +49,21 @@ msgstr "Pillow >= 2.8.1"
 msgid "kivy >= 1.9.0"
 msgstr "kivy >= 1.9.0"
 
-#: ../../installation.rst:22
-msgid "kivy.garden.magnet"
-msgstr "kivy.garden.magnet"
-
-#: ../../installation.rst:32
-msgid ""
-"For now, no setup or binary are available, you have to clone the repository:"
-msgstr ""
-"Actuellement, aucun setup ni binaire ne sont disponibles, il vous faut "
-"cloner le dépôt:"
-
-#: ../../installation.rst:40
+#: ../../installation.rst:29
 msgid "Windows"
 msgstr "Windows"
 
-#: ../../installation.rst:42
+#: ../../installation.rst:31
 msgid "Current version was only tested on Windows 7."
 msgstr "La version actuelle n'a été testé que sous Windows 7."
 
-#: ../../installation.rst:44
+#: ../../installation.rst:33
 msgid "Download setup at : https://github.com/octogene/hadaly/releases/latest"
 msgstr ""
 "Téléchargez l'installateur : "
 "https://github.com/octogene/hadaly/releases/latest"
 
-#: ../../installation.rst:47
+#: ../../installation.rst:36
 msgid "Android"
 msgstr "Android"
 
@@ -86,13 +75,21 @@ msgstr "python >= 2.7 (compatible avec python 3.4)"
 msgid "lxml >= 3.4"
 msgstr "lxml >= 3.4"
 
-#: ../../installation.rst:23
-msgid "kivy.garden.filechooserthumbview"
-msgstr "kivy.garden.filechooserthumbview"
-
-#: ../../installation.rst:49
+#: ../../installation.rst:38
 msgid "Soon..."
 msgstr "Bientôt..."
+
+#~ msgid "kivy.garden.magnet"
+#~ msgstr "kivy.garden.magnet"
+
+#~ msgid "kivy.garden.filechooserthumbview"
+#~ msgstr "kivy.garden.filechooserthumbview"
+
+#~ msgid ""
+#~ "For now, no setup or binary are available, you have to clone the repository:"
+#~ msgstr ""
+#~ "Actuellement, aucun setup ni binaire ne sont disponibles, il vous faut "
+#~ "cloner le dépôt:"
 
 #~ msgid "python >= 2.7.7 (compatible with python 3.4)"
 #~ msgstr "python >= 2.7.7 (compatible avec python 3.4)"
