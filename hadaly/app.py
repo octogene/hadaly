@@ -530,7 +530,6 @@ class Manager(ScreenManager):
         Window.bind(on_key_down=self._on_keyboard_down)
 
     def _on_keyboard_down(self, instance, key, scancode, codepoint, modifier, **kwargs):
-        print(key)
         if key == 275 and self.current == 'viewer':
             self.get_screen('viewer').carousel.load_next(mode='next')
         elif key == 276 and self.current == 'viewer':
