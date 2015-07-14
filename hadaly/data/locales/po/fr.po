@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-14 18:41+0200\n"
-"PO-Revision-Date: 2015-07-14 18:43+0100\n"
+"POT-Creation-Date: 2015-07-14 19:03+0200\n"
+"PO-Revision-Date: 2015-07-14 19:04+0100\n"
 "Last-Translator: Bogdan 'Octogene' Cordier <ooctogene@gmail.com>\n"
 "Language-Team: French <>\n"
 "Language: fr\n"
@@ -123,6 +123,11 @@ msgstr "Téléchargement en cours..."
 #: hadaly/app.py:465 hadaly/app.py:492
 msgid "No results found."
 msgstr "Aucun résultats trouvés."
+
+#: hadaly/app.py:514
+#, python-brace-format
+msgid "Page {page} on {total_page}"
+msgstr "Page {page} sur {total_page}"
 
 #: hadaly/search.py:45
 msgid "Please enter a search term."

@@ -511,7 +511,7 @@ class HadalyApp(App):
             image = ItemButton(photo=photo, source=photo['thumb'], keep_ratio=True)
             search_screen.box.grid.add_widget(image)
 
-        search_screen.box.status = "Page {page} on {total_page}".format(page=search_screen.box.current_page,
+        search_screen.box.status = _('Page {page} on {total_page}').format(page=search_screen.box.current_page,
                                                                         total_page=search_screen.box.total_pages)
 
     def on_stop(self):
