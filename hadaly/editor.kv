@@ -72,10 +72,14 @@
     grid_layout: _grid_layout
     BoxLayout:
         padding: [dp(20), dp(20), dp(20), dp(20)]
-        GridLayout:
-            spacing: dp(20)
-            cols: app.config.getint('editor', 'cols')
-            id: _grid_layout
+        ScrollView:
+            do_scroll_x: False
+            GridLayout:
+                spacing: dp(20)
+                cols: app.config.getint('editor', 'cols')
+                height: self.minimum_height
+                id: _grid_layout
+                size_hint_y: None
 
 <DraggableSlide>:
     ncols: app.config.getint('editor', 'cols')
