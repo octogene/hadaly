@@ -6,7 +6,8 @@ from functools import partial
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
-from kivy.properties import StringProperty, ObjectProperty, NumericProperty, BooleanProperty
+from kivy.properties import (StringProperty, ObjectProperty,
+                             NumericProperty, BooleanProperty, DictProperty)
 from .magnet import Magnet
 from kivy.clock import Clock
 from kivy.logger import Logger
@@ -99,6 +100,10 @@ class DraggableSlide(Magnet):
     old_index = NumericProperty(None)
     new_index = NumericProperty(None)
     no_slides = NumericProperty(None)
+    transitions = DictProperty({'x': 'out_expo',
+                                'y': 'in_sine',
+                                'size': 'out_elastic'})
+    duration = NumericProperty(0.5)
 
     def on_img(self, *args):
         self.clear_widgets()
@@ -121,30 +126,28 @@ class DraggableSlide(Magnet):
 
     def on_touch_down(self, touch, *args):
         if self.collide_point(*touch.pos):
-            if touch.is_touch:
-                self.create_clock(touch)
             if touch.is_double_tap:
                 self.delete_clock(touch)
                 popup = SlideInfoDialog(slide=self.img)
                 popup.open()
+            else:
+                self.create_clock(touch)
 
         return super(DraggableSlide, self).on_touch_down(touch)
 
     def single_tap(self, touch, *args):
-        if self.collide_point(*touch.pos):
-            grid_layout = self.app.root.current_screen.slides_view.grid_layout
-            # Get position of current slide and number of slides
-            for index, value in enumerate(grid_layout.children):
-                if self == value:
-                    self.old_index = index
-                    self.no_slides = len(grid_layout.children)
+        grid_layout = self.app.root.current_screen.slides_view.grid_layout
+        # Get position of current slide and number of slides
+        for index, value in enumerate(grid_layout.children):
+            if self == value:
+                self.old_index = index
+                self.no_slides = len(grid_layout.children)
 
-            touch.grab(self)
-            self.remove_widget(self.img)
-            self.app.root.current_screen.add_widget(self.img)
-            self.center = touch.pos
-            self.img.center = touch.pos
-            return True
+        touch.grab(self)
+        self.remove_widget(self.img)
+        self.app.root.current_screen.add_widget(self.img)
+        self.center = self.to_window(*touch.pos)
+        self.img.center = touch.pos
 
         return super(DraggableSlide, self).on_touch_down(touch)
 
@@ -152,8 +155,7 @@ class DraggableSlide(Magnet):
         grid_layout = self.app.root.current_screen.slides_view.grid_layout
 
         if touch.grab_current == self:
-
-            self.img.center = touch.pos
+            self.img.center = self.to_window(*touch.pos)
             if grid_layout.collide_point(*touch.pos):
                 grid_layout.remove_widget(self)
 
@@ -169,7 +171,7 @@ class DraggableSlide(Magnet):
                 if self.parent == grid_layout:
                     grid_layout.remove_widget(self)
 
-                self.center = touch.pos
+                self.center = self.to_window(*touch.pos)
 
     def on_touch_up(self, touch, *args):
         grid_layout = self.app.root.current_screen.slides_view.grid_layout
@@ -193,8 +195,9 @@ class DraggableSlide(Magnet):
                 self.app.update_presentation('mv', self.old_index, self.new_index)
 
             self.app.root.current_screen.remove_widget(self.img)
+            self.img.center = self.to_local(*touch.pos)
             self.add_widget(self.img)
             touch.ungrab(self)
             return True
 
-        return super(DraggableSlide, self).on_touch_up(touch, *args)
+        return super(DraggableSlide, self).on_touch_up(touch)

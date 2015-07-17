@@ -1,4 +1,13 @@
 [
+  {"type":"title", "title":"General"},
+  
+  { "type":"bool",
+    "title":"Switch to Viewer",
+    "desc":"Automatically switch to Viewer when opening an *.opah file",
+    "section":"general",
+    "key":"switch_on_start",
+    "true":"auto" },
+  
   {"type":"title", "title":"Editor"},
   
   { "type":"numeric",
