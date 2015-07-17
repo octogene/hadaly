@@ -25,6 +25,8 @@ import tarfile
 
 
 from kivy.config import Config
+Config.set('graphics', 'fullscreen', 'auto')
+
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.properties import StringProperty, ListProperty, DictProperty, NumericProperty
@@ -166,7 +168,7 @@ class HadalyApp(App):
             try:
                 self.root.get_screen('viewer').update_carousel()
             except AttributeError:
-                Logger.exception('Application: Viewer dialog not yet added !')
+                Logger.debug('Application: Viewer dialog not yet added !')
         elif type == 'mv':
             Logger.debug('Application: Moving presentation item.')
             try:
@@ -179,7 +181,7 @@ class HadalyApp(App):
                 try:
                     self.root.get_screen('viewer').update_carousel()
                 except AttributeError:
-                    Logger.exception('Application: Viewer dialog not yet added !')
+                    Logger.debug('Application: Viewer dialog not yet added !')
             except TypeError:
                 Logger.exception('Application: Only one slide in presentation view. (BUG)')
         elif type == 'update':
