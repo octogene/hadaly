@@ -23,7 +23,7 @@ class ViewerScreen(Screen):
     app = ObjectProperty(None)
     dialog = ObjectProperty(None)
 
-    def on_pre_enter(self, *args):
+    def on_enter(self, *args):
         if not self.dialog:
             self.dialog = Factory.SlidesDialog()
         try:
