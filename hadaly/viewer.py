@@ -16,6 +16,8 @@ from kivy.vector import Vector
 from kivy.logger import Logger
 from kivy.metrics import dp
 from kivy.uix.colorpicker import ColorPicker
+from kivy.graphics.instructions import InstructionGroup
+from kivy.graphics.vertex_instructions import Line
 
 
 
@@ -210,6 +212,14 @@ class SlideViewer(ScatterLayout):
             self.slidebox.toolbar.lock_btn.text]
         if self.painter:
             self.painter.locked = {True: False, False: True}[self.locked]
+
+    def draw_grid(self, hdiv=2, wdiv=2):
+        grid = InstructionGroup()
+        print(self.pos, self.content.children[1].pos, self.image.pos, self.image.center, self.to_local(*self.image.pos))
+        img_size = self.image.get_norm_image_size()
+        grid.add(Line(points=[self.image.pos[0], img_size[1]/2, self.image.pos[0] + img_size[0], img_size[1]/2], width=3))
+        grid.add(Line(points=[img_size[0]/2, 0, img_size[0]/2, img_size[1]], width=3))
+        self.image.canvas.add(grid)
 
 
 class PainterToolBar(BoxLayout):

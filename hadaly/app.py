@@ -30,7 +30,7 @@ Config.set('graphics', 'fullscreen', 'auto')
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.properties import StringProperty, ListProperty, DictProperty, NumericProperty
-from kivy.uix.screenmanager import ScreenManager, SlideTransition, FadeTransition
+from kivy.uix.screenmanager import ScreenManager, FadeTransition
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.factory import Factory
@@ -40,7 +40,7 @@ from .viewer import SlideBox
 from kivy.logger import Logger
 from kivy.network.urlrequest import UrlRequest
 from .search import ItemButton
-from kivy.uix.filechooser import FileChooserIconView, FileChooserListView
+from kivy.uix.filechooser import FileChooserListView
 
 
 class HadalyApp(App):
@@ -117,7 +117,7 @@ class HadalyApp(App):
             self.show_popup(_('Error'), _('No file selected'))
         else:
             if len(self.root.current_screen.slides_view.grid_layout.children) > 0:
-                self.clear()
+                self.create_presentation()
 
             try:
                 with open(os.path.join(self.tempdir, 'presentation.json'), 'r') as fd:
@@ -150,7 +150,9 @@ class HadalyApp(App):
 
                 self.root.current_screen.slides_view.grid_layout.add_widget(drag_slide)
 
-    def clear(self):
+    def create_presentation(self):
+        '''Remove all slides, clear presentation and initialise a new one.
+        '''
         self.root.current_screen.slides_view.grid_layout.clear_widgets()
         self.root.get_screen('viewer').carousel.clear_widgets()
         self.presentation = {'app': ('hadaly', app_version), 'title': _('New Title'), 'slides': []}
@@ -220,7 +222,7 @@ class HadalyApp(App):
                 popup.open()
 
     def save(self, path, filename):
-        """Save file.
+        """Save presentation as *.opah file.
 
         :param path: path where to save to as string
         :param filename: filename of file to save as string
@@ -278,6 +280,20 @@ class HadalyApp(App):
         """
         self.root.current_screen.carousel.index = index
 
+    def add_slide_to_compare(self, index):
+        slide = SlideBox(slide=self.presentation['slides'][index])
+        self.root.current_screen.box.add_widget(slide, 0)
+        # Change scatter position to compensate screen split.
+        pos = self.root.current_screen.carousel.current_slide.viewer.pos
+        self.root.current_screen.carousel.current_slide.viewer.pos = (pos[0] / 2, pos[1])
+
+    def rm_slide_to_compare(self):
+        self.root.current_screen.box.remove_widget(self.root.current_screen.box.children[0])
+        pos = self.root.current_screen.carousel.current_slide.viewer.pos
+        self.root.current_screen.carousel.current_slide.viewer.pos = (pos[0] * 2, pos[1])
+
+
+
     def compare_slide(self, index=None, action='add'):
         """Add new SlideBox to ViewerScreen based on SlideButton index.
 
@@ -295,14 +311,12 @@ class HadalyApp(App):
             pos = self.root.current_screen.carousel.current_slide.viewer.pos
             self.root.current_screen.carousel.current_slide.viewer.pos = (pos[0] * 2, pos[1])
 
-    def set_title(self):
+    def set_presentation_title(self):
         popup = Factory.TitleDialog()
         popup.open()
 
     def show_add_slide(self, original_src, *args):
         """Show dialog to add a slide.
-
-        :param original_src: image path as string.
         """
         original_src.popup.dismiss()
         self.config.set('editor', 'last_dir', os.path.dirname(original_src.selection[0]))

@@ -83,7 +83,7 @@
             AsyncImage:
                 source: root.slide['img_src']
                 keep_ratio: True
-                mipmap: True
+                mipmap: False
                 id: _image
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             Painter:
@@ -134,6 +134,16 @@
                     size_hint: (None, None)
                     size: (dp(win.Window.height / 20), dp(win.Window.height / 20))
                     on_press: root.viewer.lock()
+                Button:
+                    id: _grid_btn
+                    background_color: [1, 1, 1, 0]
+                    border_color: [1,1,1,1]
+                    text: u'\uf009'
+                    font_name: 'data/fonts/fontawesome-webfont.ttf'
+                    font_size: str(win.Window.height / 20) + 'sp'
+                    size_hint: (None, None)
+                    size: (dp(win.Window.height / 20), dp(win.Window.height / 20))
+                    on_press: root.viewer.draw_grid()
 
 <ViewSlideLabel@Label>:
     font_size: self.parent.font

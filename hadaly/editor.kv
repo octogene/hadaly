@@ -25,7 +25,7 @@
     ActionButton:
         text: app.presentation['title']
         horizontal: root.center_y
-        on_press: app.set_title()
+        on_press: app.set_presentation_title()
     ActionButton:
         on_press: app.show_file_explorer()
         font_name: 'data/fonts/fontawesome-webfont.ttf'
@@ -52,7 +52,7 @@
         size: (_save_as.texture_size[0] + 10, self.size[1])
         ActionButton:
             text: _('New')
-            on_release: action_group._dropdown.select(app.clear())
+            on_release: action_group._dropdown.select(app.create_presentation())
         ActionButton:
             text: _('Open')
             on_release: action_group._dropdown.select(app.show_open())
