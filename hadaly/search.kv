@@ -53,7 +53,7 @@
         TextInput:
             id: _term
             on_text_validate: root.search(self.text, root.action_bar.search_view.action_group.text)
-            font_size: ''.join((unicode(int(self.parent.height / 2)), 'sp'))
+            font_size: ''.join((str(int(self.parent.height / 2)), 'sp'))
             multiline: False
     GridLayout:
         id: _grid

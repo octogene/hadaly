@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #:kivy 1.9.0
 #:import win kivy.core.window
+#:import expanduser os.path.expanduser
 
 <EditorScreen@Screen>:
     slides_view: _slides_view
@@ -25,7 +26,7 @@
     ActionButton:
         text: app.presentation['title']
         horizontal: root.center_y
-        on_press: app.set_title()
+        on_press: app.set_presentation_title()
     ActionButton:
         on_press: app.show_file_explorer()
         font_name: 'data/fonts/fontawesome-webfont.ttf'
@@ -52,7 +53,7 @@
         size: (_save_as.texture_size[0] + 10, self.size[1])
         ActionButton:
             text: _('New')
-            on_release: action_group._dropdown.select(app.clear())
+            on_release: action_group._dropdown.select(app.create_presentation())
         ActionButton:
             text: _('Open')
             on_release: action_group._dropdown.select(app.show_open())
@@ -109,7 +110,7 @@
         text: u'\uf05a'
         text_size: self.size
         font_name: 'data/fonts/fontawesome-webfont.ttf'
-        font_size: ''.join((unicode(int(root.width / 8)), 'sp'))
+        font_size: ''.join((str(int(root.width / 8)), 'sp'))
         halign: 'center'
         valign: 'middle'
         background_color: [1, 1, 1, 0]
@@ -264,6 +265,7 @@
             id: filechooser
             on_selection: text_input.text = self.selection and self.selection[0] or ''
             filters: ['*.opah']
+            path: expanduser('~')
         TextInput:
             id: text_input
             text: '*.opah'

@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, unicode_literals, absolute_import
 
-try:
-    from urlparse import urlparse, parse_qs
-except ImportError:
-    from urllib.parse import urlparse, parse_qs
-import urllib
+from urllib.parse import urlparse, parse_qs
+from urllib.request import urlopen
 from lxml import html
 
 
@@ -112,7 +109,7 @@ class SearchItemInfo(Popup):
         if self.provider == 'MET':
             # Check if high-res is available.
             url = self.photo['thumb'].replace('web-thumb', 'original')
-            req = urllib.urlopen(url)
+            req = urlopen(url)
             if req.getcode() == 404:
                 Logger.debug('Search: High-res image not available.')
                 self.app.show_popup(_('Error'), _('High-res image not available, downloading inferior quality.'))
@@ -124,7 +121,7 @@ class SearchItemInfo(Popup):
 
         elif self.provider == 'Getty':
 
-            req = urllib.urlopen(self.photo['obj_link'])
+            req = urlopen(self.photo['obj_link'])
             tree = html.parse(req)
             img_link = tree.xpath('//div[@class="cs-result-image"]//span[@class="nav"]/a/@href')
             if img_link:

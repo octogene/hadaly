@@ -63,7 +63,7 @@ class Slide(BoxLayout):
             self.info_panel = True
 
             info_panel = Factory.SlideInfo(id='info_panel')
-            info_panel.font = ''.join((unicode(int(self.parent.height / 14)), 'sp'))
+            info_panel.font = ''.join((str(int(self.parent.height / 14)), 'sp'))
             info_panel.artist.text = self.artist
             info_panel.title.text = self.title
             info_panel.year.text = self.year
@@ -72,7 +72,7 @@ class Slide(BoxLayout):
     def on_size(self, *args):
         try:
             info_panel = [child for child in self.children if child.id == 'info_panel'][0]
-            info_panel.font = ''.join((unicode(int(self.parent.height / 14)), 'sp'))
+            info_panel.font = ''.join((str(int(self.parent.height / 14)), 'sp'))
         except IndexError:
             Logger.debug('Editor: No child with "info_panel" id found.')
 
