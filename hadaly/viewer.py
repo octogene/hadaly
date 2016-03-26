@@ -25,7 +25,7 @@ class ViewerScreen(Screen):
     app = ObjectProperty(None)
     dialog = ObjectProperty(None)
 
-    def on_enter(self, *args):
+    def on_pre_enter(self, *args):
         if not self.dialog:
             self.dialog = Factory.SlidesDialog()
         try:
@@ -115,7 +115,7 @@ class SlideBox(BoxLayout, StencilView):
         except IndexError:
             Logger.debug('Viewer: No img_zoom to resize.')
 
-        self.gui_layout.slide_info.font = ''.join((unicode(int(self.height / 35)), 'sp'))
+        self.gui_layout.slide_info.font = ''.join((str(int(self.height / 35)), 'sp'))
 
     def get_caption(self):
 
@@ -197,7 +197,8 @@ class SlideViewer(ScatterLayout):
             self.slidebox.toolbar.add_widget(PainterToolBar(painter=self.painter,
                                                             paint_color=self.painter.tools[self.painter.current_tool][
                                                                 'color']))
-            self.app.root.get_screen('viewer').carousel.scroll_timeout = 50
+            self.app.root.get_screen('viewer').carousel.scroll_timeout = 20
+            self.app.root.get_screen('viewer').carousel.scroll_distance = '50dp'
         elif self.locked:
             Logger.info('Viewer: Unlocking Slide.')
             self.locked = False
@@ -206,6 +207,7 @@ class SlideViewer(ScatterLayout):
             self.do_rotation = True
             self.slidebox.toolbar.remove_widget(self.slidebox.toolbar.children[0])
             self.app.root.get_screen('viewer').carousel.scroll_timeout = 200
+            self.app.root.get_screen('viewer').carousel.scroll_distance = '20dp'
 
     def on_locked(self, *args):
         self.slidebox.toolbar.lock_btn.text = {u'\uf13e': u'\uf023', u'\uf023': u'\uf13e'}[
@@ -252,7 +254,7 @@ class SlideButton(ButtonBehavior, Image):
     def on_release(self):
         if self.parent.dialog.to_switch:
             current_index = self.parent.children.index(self)
-            carousel_index = list(reversed(xrange(len(self.parent.children))))
+            carousel_index = list(reversed(range(len(self.parent.children))))
             self.app.switch_slide(carousel_index[current_index])
         else:
             self.app.compare_slide(self.parent.children.index(self))

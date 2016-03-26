@@ -4,19 +4,18 @@ import shutil
 
 from kivy import require
 
-require('1.9.0')
+require('1.9.1')
 
 import os, json
 from sys import argv
 
 from .meta import version as app_version
-import urllib
+from urllib.parse import urlencode
 import re
 
-try:
-    from urlparse import urlparse
-except ImportError:
-    from urllib.parse import urlparse
+from urllib.parse import urlparse
+from urllib.parse import quote
+
 from lxml import html
 import tempfile
 
@@ -29,7 +28,7 @@ Config.set('graphics', 'fullscreen', 'auto')
 
 from kivy.app import App
 from kivy.core.window import Window
-from kivy.properties import StringProperty, ListProperty, DictProperty, NumericProperty
+from kivy.properties import StringProperty, ListProperty, DictProperty
 from kivy.uix.screenmanager import ScreenManager, FadeTransition
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
@@ -79,7 +78,7 @@ class HadalyApp(App):
         config.set('editor', 'autosave_time', '15')
         config.set('editor', 'autosave', '0')
         config.set('editor', 'font_size', '12')
-        config.set('editor', 'last_dir', None)
+        config.set('editor', 'last_dir', os.path.expanduser('~'))
         config.set('editor', 'cols', '6')
         config.set('viewer', 'thumb', '1')
         config.set('viewer', 'thumb_pos', 'bottom left')
@@ -233,7 +232,7 @@ class HadalyApp(App):
         self.filename = filename
         self.dirname = path
 
-        tar = tarfile.open(os.path.join(path, filename), 'w')
+        tar = tarfile.open(os.path.join(path, filename), 'a')
 
         # Add image file to *.opah file
         try:
@@ -291,8 +290,6 @@ class HadalyApp(App):
         self.root.current_screen.box.remove_widget(self.root.current_screen.box.children[0])
         pos = self.root.current_screen.carousel.current_slide.viewer.pos
         self.root.current_screen.carousel.current_slide.viewer.pos = (pos[0] * 2, pos[1])
-
-
 
     def compare_slide(self, index=None, action='add'):
         """Add new SlideBox to ViewerScreen based on SlideButton index.
@@ -375,7 +372,7 @@ class HadalyApp(App):
         api_key = '624d3a7086d14e85f1422430f0b889a1'
         base_url = 'https://api.flickr.com/services/rest/?'
         method = 'flickr.photos.search'
-        params = urllib.urlencode([('method', method),
+        params = urlencode([('method', method),
                                    ('text', term),
                                    ('api_key', api_key),
                                    ('format', 'json'),
@@ -388,7 +385,7 @@ class HadalyApp(App):
         return result
 
     def request(self, url):
-        url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        url = quote(url, safe="%/:=&?~#+!$,;'@()*[]")
         req = UrlRequest(url, debug=True)
         req.wait()
         return req.result
@@ -397,7 +394,7 @@ class HadalyApp(App):
         pb = ProgressBar(id='_pb')
         self.progress_dialog = Popup(title=_('Downloading...'),
                                      size_hint=(0.5, 0.2), content=pb, auto_dismiss=False)
-        url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        url = quote(url, safe="%/:=&?~#+!$,;'@()*[]")
         path = os.path.join(self.tempdir,
                             os.path.basename(urlparse(url).path))
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0"}
@@ -465,7 +462,7 @@ class HadalyApp(App):
         url = engines[engine].format(term=term,
                                      rpp=self.config.get('search', 'search_rpp'),
                                      page=page)
-        clean_url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        clean_url = quote(url, safe="%/:=&?~#+!$,;'@()*[]")
 
         UrlRequest(clean_url, on_success=self.parse_results, debug=True)
 
@@ -495,7 +492,7 @@ class HadalyApp(App):
                         object.xpath('./div[@class="list-view-object-info"]/div[@class="artist"]/text()')[::2][0]
                 except IndexError:
                     result['artist'] = 'Unknown'
-                result['thumb'] = urllib.quote(object.xpath('./div[@class="list-view-thumbnail"]//img/@src')[0],
+                result['thumb'] = quote(object.xpath('./div[@class="list-view-thumbnail"]//img/@src')[0],
                                                safe="%/:=&?~#+!$,;'@()*[]")
                 object_info = object.xpath('./div[@class="list-view-object-info"]/div[@class="objectinfo"]/text()')
                 result['year'] = object_info[0].strip('Dates: ')
@@ -521,7 +518,7 @@ class HadalyApp(App):
             obj_link = tree.xpath(
                 '//div[@class="cs-result-data-brief"]//td[* = "Title:" or * = "Primary Title:"]/following-sibling::td[1]/p[@class="cs-record-link"]/a/@href')
 
-            results = [{'title': a, 'artist': b, 'year': c, 'thumb': urllib.quote(d, safe="%/:=&?~#+!$,;'@()*[]"),
+            results = [{'title': a, 'artist': b, 'year': c, 'thumb': quote(d, safe="%/:=&?~#+!$,;'@()*[]"),
                         'obj_link': e}
                        for a, b, c, d, e in zip(titles, artists, dates, thumb, obj_link)]
 
