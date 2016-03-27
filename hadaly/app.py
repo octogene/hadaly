@@ -19,6 +19,10 @@ from PIL import Image
 import tarfile
 
 from kivy.config import Config
+
+# Config.set('graphics', 'fullscreen', 'auto')
+Config.set('kivy', 'log_level', 'debug')
+
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.properties import StringProperty, ListProperty, DictProperty, NumericProperty
@@ -82,7 +86,8 @@ class HadalyApp(App):
 
     def on_start(self):
         self.tempdir = tempfile.mkdtemp()
-
+        self.presentation['title'] = _('New Title')
+        self.engines = json.load(open('hadaly/data/search_engines.json'))
         try:
             if argv[1].endswith('.opah'):
                 self.load_slides(os.path.dirname(argv[1]), [os.path.basename(argv[1])])
@@ -417,80 +422,78 @@ class HadalyApp(App):
 
     def search_term(self, term, engine, page):
 
-        engines = {
-            'met': ('http://www.metmuseum.org/'
-                    'collection/the-collection-online/search'
-                    '?ft={term}&ao=on&rpp={rpp}&pg={page}'),
-            'getty': ('http://search.getty.edu/'
-                      'gateway/search'
-                      '?q={term}&cat=highlight&f="Open+Content+Images"&rows={rpp}&srt=&dir=s&dsp=0&img=0&pg={page}')
-        }
+        params = urllib.parse.urlencode({self.engines[engine]['params']['term']: term,
+                            self.engines[engine]['params']['rpp']: self.config.get('search', 'search_rpp'),
+                            self.engines[engine]['params']['page']: page})
 
-        url = engines[engine].format(term=term,
-                                     rpp=self.config.get('search', 'search_rpp'),
-                                     page=page)
-        clean_url = urllib.parse.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        url = ''.join((self.engines[engine]['base_url'], params))
 
-        UrlRequest(clean_url, on_success=self.parse_results, debug=True)
+        UrlRequest(url, on_success=self.parse_results, debug=True)
 
     def parse_results(self, request, data):
-        tree = html.fromstring(data)
         search_screen = self.root.get_screen('search')
         results = []
 
-        if 'metmuseum' in urllib.parse.urlparse(request.url).hostname:
-
+        if self.engines[urllib.parse.urlparse(request.url).hostname]['results']['format'] == 'html':
+            tree = html.fromstring(data)
             try:
-                total_pages = tree.xpath(
-                    '//li[starts-with(@id, "phcontent_0_phfullwidthcontent_0_paginationWidget_rptPagination_paginationLineItem_")]//a/text()')
-                search_screen.box.total_pages = max([int(n) for n in total_pages])
-            except ValueError:
-                self.show_popup(_('Error'), _('No results found.'))
-                return
-
-            objects = tree.xpath('//div[starts-with(@class, "list-view-object ")]')
-
-            for object in objects:
-                result = {}
-                result['title'] = object.xpath('./div[@class="list-view-object-info"]/a/div[@class="objtitle"]/text()')[
-                    0]
-                try:
-                    result['artist'] = \
-                        object.xpath('./div[@class="list-view-object-info"]/div[@class="artist"]/text()')[::2][0]
-                except IndexError:
-                    result['artist'] = 'Unknown'
-                result['thumb'] = urllib.parse.quote(object.xpath('./div[@class="list-view-thumbnail"]//img/@src')[0],
-                                               safe="%/:=&?~#+!$,;'@()*[]")
-                object_info = object.xpath('./div[@class="list-view-object-info"]/div[@class="objectinfo"]/text()')
-                result['year'] = object_info[0].strip('Dates: ')
-                results.append(result)
-
-        elif 'getty' in urllib.parse.urlparse(request.url).hostname:
-
-            try:
-                search_screen.box.total_pages = tree.xpath('//td[@class="cs-page"]//input/@count')[0]
-                if int(re.sub("[^0-9]", "", tree.xpath('//strong[@id="cs-results-count"]//text()')[0])) == 0:
+                total_results = re.sub("[^0-9]", "", tree.xpath(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['total_results'])[0])
+                if not total_results or int(total_results) == 0:
                     raise ValueError
             except ValueError:
                 self.show_popup(_('Error'), _('No results found.'))
                 return
 
-            artists = tree.xpath(
-                '//div[@class="cs-result-data-brief"]//td[* = "Creator:" or * = "Maker Name:"]/following-sibling::td[1]/p/text()')
-            titles = tree.xpath(
-                '//div[@class="cs-result-data-brief"]//td[* = "Title:" or * = "Primary Title:"]/following-sibling::td[1]/p[@class="cs-record-link"]/a/strong/text()')
-            dates = tree.xpath(
-                '//div[@class="cs-result-data-brief"]//td[* = "Date:"]/following-sibling::td[1]/p/text()')
-            thumb = tree.xpath('//img[@class="cs-result-thumbnail"]/@src')
-            obj_link = tree.xpath(
-                '//div[@class="cs-result-data-brief"]//td[* = "Title:" or * = "Primary Title:"]/following-sibling::td[1]/p[@class="cs-record-link"]/a/@href')
+            if isinstance(tree.xpath(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['total_pages']), list):
+                search_screen.box.total_pages = tree.xpath(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['total_pages'])[0]
+            else:
+                search_screen.box.total_pages = tree.xpath(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['total_pages'])
 
-            results = [{'title': a, 'artist': b, 'year': c, 'thumb': urllib.parse.quote(d, safe="%/:=&?~#+!$,;'@()*[]"),
-                        'obj_link': e}
-                       for a, b, c, d, e in zip(titles, artists, dates, thumb, obj_link)]
+            for entry in tree.xpath(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['entries']):
+                artist = entry.xpath(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['artist'])[0]
+                title = entry.xpath(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['title'])[0]
+                date = entry.xpath(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['date'])[0]
+                thumb = entry.xpath(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['thumb'])[0]
+                obj_link = entry.xpath(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['obj_link'])[0]
+
+                results.append({'title': title,
+                                'artist': artist,
+                                'year': date,
+                                'thumb': urllib.parse.quote(thumb, safe="%/:=&?~#+!$,;'@()*[]"),
+                                'obj_link': obj_link}
+                               )
+
+        elif self.engines[urllib.parse.urlparse(request.url).hostname]['results']['format'] == 'json':
+            from ast import literal_eval
+            from functools import reduce
+
+            try:
+                total_results = reduce(dict.__getitem__, literal_eval(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['total_results']), data)
+                if int(total_results) == 0:
+                    raise ValueError
+            except ValueError:
+                self.show_popup(_('Error'), _('No results found.'))
+                return
+
+            entries = reduce(dict.__getitem__, literal_eval(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['entries']), data)
+            search_screen.box.total_pages = int(total_results / len(entries))
+
+            for entry in entries:
+                artist = reduce(dict.__getitem__, literal_eval(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['artist']), entry)
+                title = reduce(dict.__getitem__, literal_eval(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['title']), entry)
+                date = reduce(dict.__getitem__, literal_eval(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['date']), entry)
+                thumb = reduce(dict.__getitem__, literal_eval(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['thumb']), entry)
+                obj_link = reduce(dict.__getitem__, literal_eval(self.engines[urllib.parse.urlparse(request.url).hostname]['results']['obj_link']), entry)
+
+                results.append({'title': title,
+                                'artist': artist,
+                                'year': date,
+                                'thumb': urllib.parse.quote(thumb, safe="%/:=&?~#+!$,;'@()*[]"),
+                                'obj_link': obj_link}
+                               )
 
         for photo in results:
-            Logger.debug('Search (MET): Loading {url}'.format(url=photo['thumb']))
+            Logger.debug('Search : Loading {url}'.format(url=photo['thumb']))
             image = ItemButton(photo=photo, source=photo['thumb'], keep_ratio=True)
             search_screen.box.grid.add_widget(image)
 
