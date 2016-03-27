@@ -35,8 +35,8 @@ class SearchBox(BoxLayout):
         Logger.debug('Search: requesting {term} from {provider}'.format(term=term,
                                                                         provider=provider))
         self.grid.clear_widgets()
-        providers = {'MetMuseum': 'met',
-                     'Getty OCI': 'getty'}
+        providers = {'MetMuseum': 'www.metmuseum.org',
+                     'Getty OCI': 'search.getty.edu'}
         if not term:
             popup = Popup(title=_('Error'), size_hint=(0.45, 0.2))
             popup.add_widget(Label(text=_('Please enter a search term.')))
@@ -61,7 +61,7 @@ class SearchBox(BoxLayout):
             self.app.search_term(term, providers[provider], self.current_page)
 
     def search_next(self, text, provider):
-        if self.current_page < self.total_pages:
+        if self.current_page < int(self.total_pages):
             self.current_page += 1
             self.search(text, provider)
 
@@ -108,7 +108,7 @@ class SearchItemInfo(Popup):
 
         if self.provider == 'MET':
             # Check if high-res is available.
-            url = self.photo['thumb'].replace('web-thumb', 'original')
+            url = self.photo['thumb'].replace('mobile-large', 'original')
             req = urlopen(url)
             if req.getcode() == 404:
                 Logger.debug('Search: High-res image not available.')
@@ -123,9 +123,9 @@ class SearchItemInfo(Popup):
 
             req = urlopen(self.photo['obj_link'])
             tree = html.parse(req)
-            img_link = tree.xpath('//div[@class="cs-result-image"]//span[@class="nav"]/a/@href')
+            img_link = tree.xpath('//a[@id="download-open-content"]/@href')
             if img_link:
-                link = urlparse(tree.xpath('//div[@class="cs-result-image"]//span[@class="nav"]/a/@href')[0])
+                link = urlparse(img_link[0])
                 url = parse_qs(link.query)['dlimgurl'][0]
             else:
                 url = self.photo['thumb']

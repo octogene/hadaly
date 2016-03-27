@@ -1,0 +1,58 @@
+{
+  "www.metmuseum.org": {
+    "base_url": "http://www.metmuseum.org/api/collection/collectionlisting?showOnly=withImage&",
+    "params": {
+      "rpp": "perPage",
+      "artist": "artist",
+      "page": "page",
+      "term": "q",
+      "sort": "sortBy",
+      "sortings": {
+        "relevance": "Relevance"
+      },
+      "order": "sortOrder",
+      "orderings": {
+        "asc": "asc"
+      }
+    },
+    "results": {
+      "format": "json",
+      "entries": "('results',)",
+      "total_results": "('totalResults',)",
+      "title": "('title',)",
+      "artist": "('description',)",
+      "date": "('date',)",
+      "thumb": "('image',)",
+      "obj_link": "('largeImage',)"
+    }
+  },
+  "search.getty.edu": {
+    "base_url": "http://search.getty.edu/gateway/search?cat=highlight&f=\"Open+Content+Images\"&dir=s&img=1&dsp=0&",
+    "params": {
+      "rpp": "rows",
+      "artist": "artist",
+      "page": "pg",
+      "term": "q",
+      "sort": "sortBy",
+      "sortings": {
+        "relevance": "Relevance"
+      },
+      "order": "sortOrder",
+      "orderings": {
+        "asc": "asc"
+      }
+    },
+    "results": {
+      "format": "html",
+      "entries": "//div[@class=\"cs-result-item\"]",
+      "title": ".//div[@class=\"cs-result-data-brief\"]//td[* = \"Title:\" or * = \"Primary Title:\"]/following-sibling::td[1]/p[@class=\"cs-record-link\"]/a/strong/text()",
+      "artist": ".//div[@class=\"cs-result-data-brief\"]//td[* = \"Creator:\" or * = \"Maker Name:\"]/following-sibling::td[1]/p/text()",
+      "date": ".//div[@class=\"cs-result-data-brief\"]//td[* = \"Date:\"]/following-sibling::td[1]/p/text()",
+      "thumb": ".//img[@class=\"cs-result-thumbnail\"]/@src",
+      "obj_link": ".//div[@class=\"cs-result-data-brief\"]//td[* = \"Title:\" or * = \"Primary Title:\"]/following-sibling::td[1]/p[@class=\"cs-record-link\"]/a/@href",
+      "total_pages": "//td[@class=\"cs-page\"]//input/@count",
+      "total_results": "//strong[@id=\"cs-results-count\"]//text()"
+    }
+  }
+
+}
