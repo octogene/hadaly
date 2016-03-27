@@ -215,15 +215,6 @@ class SlideViewer(ScatterLayout):
         if self.painter:
             self.painter.locked = {True: False, False: True}[self.locked]
 
-    def draw_grid(self, hdiv=2, wdiv=2):
-        grid = InstructionGroup()
-        print(self.pos, self.content.children[1].pos, self.image.pos, self.image.center, self.to_local(*self.image.pos))
-        img_size = self.image.get_norm_image_size()
-        grid.add(Line(points=[self.image.pos[0], img_size[1]/2, self.image.pos[0] + img_size[0], img_size[1]/2], width=3))
-        grid.add(Line(points=[img_size[0]/2, 0, img_size[0]/2, img_size[1]], width=3))
-        self.image.canvas.add(grid)
-
-
 class PainterToolBar(BoxLayout):
     painter = ObjectProperty(None)
     paint_color = ListProperty((1, 1, 1, 1))
