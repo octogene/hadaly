@@ -1,4 +1,12 @@
 [
+  {"type":"title", "title":"General"},
+  
+  { "type":"bool",
+    "title":"Switch to Viewer",
+    "desc":"Automatically switch to Viewer when opening an *.opah file",
+    "section":"general",
+    "key":"switch_on_start" },
+
   {"type":"title", "title":"Editor"},
   
   { "type":"numeric",
@@ -11,8 +19,7 @@
     "title":"Auto-save",
     "desc":"Save every x minutes (Not yet functional)",
     "section":"editor",
-    "key":"autosave",
-    "true":"auto" },
+    "key":"autosave" },
   
   { "type":"numeric",
     "title":"Saving interval", 
@@ -32,8 +39,7 @@
     "title":"Thumbnail on zoom",
     "desc":"Show thumbnail on zoom",
     "section":"viewer",
-    "key":"thumb",
-    "true":"auto" },
+    "key":"thumb" },
   
   { "type":"options",
     "title":"Thumbnail position",

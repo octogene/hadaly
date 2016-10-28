@@ -82,7 +82,7 @@ class HadalyApp(App):
     def build_settings(self, settings):
         settings.add_json_panel('Hadaly',
                                 self.config,
-                                'data/settings_panel.json')
+                                'hadaly/data/settings_panel.json')
 
     def on_start(self):
         self.tempdir = tempfile.mkdtemp()
