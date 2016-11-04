@@ -1,4 +1,4 @@
-#Hadaly
+# Hadaly
 
 <img align="right" height="200" src="https://github.com/octogene/hadaly/raw/master/docs/_static/logo/logo_2.png"/>
 
@@ -9,13 +9,13 @@ Hadaly is a presentation software allowing to manipulate slides, in various ways
 
 It contains a presentation editor and a viewer. The editor allows you to build presentations by creating slides from pictures and by adding information about them (e.g: artist, title and year). And, well, the viewer allows you to show and manipulate the slides.
 
-Presentations are saved as \*.opah files which contains all the slides image files and their metadata (JSON).
+Presentations are saved as `*.opah` files which contains all the slides image files and their metadata (JSON format).
 
-##Installation, Documentation
+## Installation, Documentation
 
 Installation instructions and user manual can be found at : http://hadaly.readthedocs.org/
 
-##License
+## License
 
 Hadaly is released under the terms of the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
