@@ -10,7 +10,7 @@ def main(args=None):
     import locale
     import gettext
 
-    if platform() == 'android':
+    if platform == 'android':
         try:
             from jnius import autoclass
         except ImportError:

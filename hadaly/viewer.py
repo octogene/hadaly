@@ -12,52 +12,48 @@ from kivy.uix.popup import Popup
 from kivy.uix.button import ButtonBehavior
 from kivy.factory import Factory
 from kivy.properties import ObjectProperty, BooleanProperty, DictProperty, ListProperty, NumericProperty
-from kivy.vector import Vector
 from kivy.logger import Logger
-from kivy.metrics import dp
+from kivy.utils import platform
 from kivy.uix.colorpicker import ColorPicker
-from kivy.graphics.instructions import InstructionGroup
-from kivy.graphics.vertex_instructions import Line
-
-
+import threading
 
 class ViewerScreen(Screen):
     app = ObjectProperty(None)
     dialog = ObjectProperty(None)
+    slides = ListProperty(None)
+    stop = threading.Event()
 
     def on_pre_enter(self, *args):
         if not self.dialog:
             self.dialog = Factory.SlidesDialog()
-        try:
-            if not len(self.dialog.grid.children) == len(self.app.presentation['slides']):
-                Logger.debug('Viewer: Clean \& reload carousel.')
-                self.dialog.grid.clear_widgets()
-                self.carousel.clear_widgets()
+            self.start_loading_slides(self.app.presentation.slides)
+            if not platform == 'android':
+                Logger.info('Viewer : Adapting carousel to platform ({platform})'.format(platform=platform))
+                self.carousel.scroll_timeout = 2
 
-                for slide in reversed(self.app.presentation['slides']):
-                    self.dialog.grid.add_widget(Factory.SlideButton(source=slide['thumb_src'],
-                                                                    keep_ratio=True, ))
-                    image = SlideBox(slide=slide)
-                    self.carousel.add_widget(image)
+    def start_loading_slides(self, value):
+        threading.Thread(target=self.loading_slides, args=(value,)).start()
 
+    def loading_slides(self, value):
+        [self.carousel.add_widget(SlideBox(slide=slide)) for slide in reversed(value)]
+        [self.dialog.grid.add_widget(Factory.SlideButton(source=slide['thumb_src'], keep_ratio=True, )) for slide in reversed(value)]
+        self.app.root.get_screen('editor').slides_view.bind(modified=self.update_slides)
 
-        except KeyError as msg:
-            Logger.debug('Viewer: Presentations seems empty. {msg}'.format(msg=msg))
-
-    def update_carousel(self):
-        self.dialog.grid.clear_widgets()
-        self.carousel.clear_widgets()
-        for slide in reversed(self.app.presentation['slides']):
-            self.dialog.grid.add_widget(Factory.SlideButton(source=slide['thumb_src'],
-                                                            keep_ratio=True, ))
-            image = SlideBox(slide=slide)
-            self.carousel.add_widget(image)
+    def update_slides(self, instance, value):
+        c_index = list(reversed(range(len(self.carousel.slides))))
+        if value[0] == 'mv':
+            self.carousel.slides.insert(c_index[value[1][1]],
+                                        self.carousel.slides.pop(c_index[value[1][0]]))
+        elif value[0] == 'rm':
+            self.carousel.slides.pop(c_index[value.modified[1][0]])
+        elif value[0] == 'add':
+            pass
 
 class TouchActionArea(FloatLayout):
 
     def on_touch_down(self, touch):
 
-        if self.collide_point(*touch.pos) and touch.is_double_tap and len(self.app.presentation['slides']) > 0:
+        if self.collide_point(*touch.pos) and touch.is_double_tap and len(self.app.presentation.slides) > 0:
             try:
                 child = [child for child in self.children if child.collide_point(*touch.pos)][0]
             except IndexError:
@@ -89,6 +85,9 @@ class TouchActionArea(FloatLayout):
 
         return super(TouchActionArea, self).on_touch_down(touch)
 
+class ImgFullZoom(Image):
+    pass
+
 class SlideBox(BoxLayout, StencilView):
     slide = DictProperty(None)
 
@@ -108,14 +107,7 @@ class SlideBox(BoxLayout, StencilView):
 
     def on_size(self, *args):
 
-        try:
-            img_zoom = [child for child in self.float_layout.children if child.id == 'img_zoom'][0]
-            img_zoom.size = (self.size[0] / 6, (self.size[0] / 6) / img_zoom.image_ratio)
-            img_zoom.pos = [self.toolbar.pos[0], self.parent.height / 15]
-        except IndexError:
-            Logger.debug('Viewer: No img_zoom to resize.')
-
-        self.gui_layout.slide_info.font = ''.join((str(int(self.height / 35)), 'sp'))
+        self.gui_layout.slide_info.font = ''.join((str(int(self.height / 45)), 'sp'))
 
     def get_caption(self):
 
@@ -140,52 +132,41 @@ class SlideViewer(ScatterLayout):
             scale = self.scale
 
             if touch.button == 'scrolldown':
-                scale = self.scale + 0.08
+                scale = self.scale * 1.1
             elif touch.button == 'scrollup':
-                scale = max(0.1, self.scale - 0.08)
+                scale = max(0.1, self.scale * 0.9)
 
             rescale = scale * 1.0 / self.scale
             matrix = Matrix().scale(rescale, rescale, rescale)
             self.apply_transform(matrix, anchor=touch.pos)
 
-            self.check_slide_bbox()
             return False
 
         return super(SlideViewer, self).on_touch_down(touch)
 
-    def on_transform_with_touch(self, touch):
+    def on_scale(self, instance, value):
+        if value > 1:
+            if all(child.id != 'img_zoom' for child in self.parent.children):
+                # TODO: Change thumbnail position and size based on config.
+                thumb = ImgFullZoom(source=self.parent.parent.slide['thumb_src'],
+                              id='img_zoom')
 
-        self.check_slide_bbox()
+                if self.app.config.get('viewer', 'thumb_pos') == 'bottom left':
+                    thumb.pos = [0, self.parent.height / 15]
+                elif self.app.config.get('viewer', 'thumb_pos') == 'top left':
+                    thumb.pos = [0, self.parent.height - thumb.texture_size[1]]
+                elif self.app.config.get('viewer', 'thumb_pos') == 'top right':
+                    thumb.pos = [self.parent.width - thumb.texture_size[0], self.parent.height - thumb.texture_size[1]]
+                elif self.app.config.get('viewer', 'thumb_pos') == 'bottom right':
+                    pass
 
-    def check_slide_bbox(self):
-        if self.app.config.getint('viewer', 'thumb') == 1:
-            img_point = (self.bbox[0][0] + self.bbox[1][0],
-                         self.bbox[0][1] + self.bbox[1][1])
-            parent_point = (self.parent.size[0] + self.parent.pos[0],
-                            self.parent.size[1] + self.parent.pos[1])
-            if not Vector.in_bbox(self.bbox[0],
-                                  self.parent.pos,
-                                  parent_point) or not Vector.in_bbox(img_point,
-                                                                      self.parent.pos,
-                                                                      parent_point):
-
-                if all(child.id != 'img_zoom' for child in self.parent.children):
-                    # TODO: Change thumbnail position and size based on config.
-                    thumb = Image(source=self.parent.parent.slide['thumb_src'],
-                                  id='img_zoom',
-                                  size_hint=(None, None),
-                                  keep_ratio=True,
-                                  size=(self.parent.size[0] / 6,
-                                       (self.parent.size[0] / 6) / self.image.image_ratio),
-                                  pos=[self.parent.parent.toolbar.pos[0], self.parent.height / 15])
-                    self.parent.add_widget(thumb)
-
-            elif min(self.bbox[0]) > 0:
-                try:
-                    img_zoom = [child for child in self.parent.children if child.id == 'img_zoom'][0]
-                    self.parent.remove_widget(img_zoom)
-                except IndexError:
-                    Logger.debug('Viewer: No img_zoom to remove.')
+                self.parent.add_widget(thumb)
+        elif not all(child.id != 'img_zoom' for child in self.parent.children):
+            try:
+                img_zoom = [child for child in self.parent.children if child.id == 'img_zoom'][0]
+                self.parent.remove_widget(img_zoom)
+            except IndexError:
+                Logger.debug('Viewer: No img_zoom to remove.')
 
     def lock(self):
         if not self.locked:
@@ -206,7 +187,7 @@ class SlideViewer(ScatterLayout):
             self.do_translation = True
             self.do_rotation = True
             self.slidebox.toolbar.remove_widget(self.slidebox.toolbar.children[0])
-            self.app.root.get_screen('viewer').carousel.scroll_timeout = 200
+            self.app.root.get_screen('viewer').carousel.scroll_timeout = 2
             self.app.root.get_screen('viewer').carousel.scroll_distance = '20dp'
 
     def on_locked(self, *args):

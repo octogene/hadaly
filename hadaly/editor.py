@@ -4,6 +4,7 @@ from __future__ import division, unicode_literals, absolute_import
 import os
 from functools import partial
 
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
 from kivy.properties import (StringProperty, ObjectProperty,
@@ -15,6 +16,7 @@ from kivy.config import Config
 from PIL import Image
 from kivy.graphics.opengl import GL_MAX_TEXTURE_SIZE, glGetIntegerv
 from kivy.factory import Factory
+from kivy.metrics import dp
 
 
 class Slide(BoxLayout):
@@ -27,6 +29,7 @@ class Slide(BoxLayout):
     real_size = ObjectProperty(None)
     texture_size = ObjectProperty(None)
     info_panel = BooleanProperty(False)
+
 
     def get_slide_info(self):
         return {'img_src': self.img_src,
@@ -55,29 +58,24 @@ class Slide(BoxLayout):
         except IOError:
             Logger.debug('Editor: {img_src} is not a valid filename.'.format(img_src=self.img_src))
 
-    def show_info_panel(self):
-        if self.info_panel:
-            self.info_panel = False
-            self.remove_widget(self.children[0])
-        elif not self.info_panel:
+    def rm_info_panel(self, *args):
+        self.app.root.current_screen.remove_widget(args[0])
+        self.info_panel = False
+
+    def show_info_panel(self, pos):
+        if not self.info_panel:
+        #     self.info_panel = False
+        # elif not self.info_panel:
             self.info_panel = True
 
             info_panel = Factory.SlideInfo(id='info_panel')
-            info_panel.font = ''.join((str(int(self.parent.height / 14)), 'sp'))
+            Clock.schedule_once(partial(self.rm_info_panel, info_panel), 3)
+            # info_panel.font = ''.join((str(int(self.parent.height / 10)), 'sp'))
             info_panel.artist.text = self.artist
             info_panel.title.text = self.title
             info_panel.year.text = self.year
-            self.add_widget(info_panel)
-
-    def on_size(self, *args):
-        try:
-            info_panel = [child for child in self.children if child.id == 'info_panel'][0]
-            info_panel.font = ''.join((str(int(self.parent.height / 14)), 'sp'))
-        except IndexError:
-            Logger.debug('Editor: No child with "info_panel" id found.')
-
-
-
+            info_panel.pos = self.to_window(*(pos[0], pos[1] - dp(20)))
+            self.app.root.current_screen.add_widget(info_panel)
 
 class SlideInfoDialog(Popup):
     slide = ObjectProperty(None)
@@ -99,7 +97,6 @@ class DraggableSlide(Magnet):
     app = ObjectProperty(None)
     old_index = NumericProperty(None)
     new_index = NumericProperty(None)
-    no_slides = NumericProperty(None)
     transitions = DictProperty({'x': 'out_expo',
                                 'y': 'in_sine',
                                 'size': 'out_elastic'})
@@ -175,6 +172,7 @@ class DraggableSlide(Magnet):
 
     def on_touch_up(self, touch, *args):
         grid_layout = self.app.root.current_screen.slides_view.grid_layout
+        print(self.parent)
 
         if self.collide_point(*touch.pos):
             self.delete_clock(touch)
@@ -186,13 +184,15 @@ class DraggableSlide(Magnet):
                     grid_layout.add_widget(self, self.old_index)
                 else:
                     grid_layout.add_widget(self)
+
             # Delete entry in app.presentation if DraggableSlide removed.
             elif len(grid_layout.children) < self.no_slides:
-                self.app.update_presentation('rm', self.old_index, self.new_index)
-
+                self.app.root.current_screen.slides_view.modified = ['rm', (self.old_index, self.new_index), self.img.title]
             # Move entry in app.presentation accordingly to DraggableSlide move.
             elif any(touch.dpos) > 0 and self.old_index != self.new_index and self.new_index is not None:
-                self.app.update_presentation('mv', self.old_index, self.new_index)
+                self.app.root.current_screen.slides_view.modified = ['mv', (self.old_index, self.new_index), self.img.title]
+
+            self.app.presentation.slides = [child.img.get_slide_info() for child in grid_layout.children]
 
             self.app.root.current_screen.remove_widget(self.img)
             self.img.center = self.to_local(*touch.pos)

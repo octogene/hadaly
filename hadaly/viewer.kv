@@ -15,6 +15,7 @@
             id: _carousel
             direction: 'right'
             loop: False
+            anim_move_duration: 0.25
     TouchActionArea:
         app: app
         Widget:
@@ -38,17 +39,16 @@
             size_hint: 0.5,0.4
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
-<ImgFullZoom@Image>:
-    pos_hint: 0, 0
-    size: 200, 200
+<ImgFullZoom>:
     size_hint: None, None
     keep_ratio: True
     allow_stretch: False
     id: img_zoom
+    on_texture_size: self.size = self.texture_size
 
 <SlidesDialog>:
     grid: _grid
-    size_hint: 0.6, 0.6
+    size_hint: 0.5, 0.5
     GridLayout:
         id: _grid
         cols: 5
@@ -83,14 +83,12 @@
             AsyncImage:
                 source: root.slide['img_src']
                 keep_ratio: True
-                mipmap: False
                 id: _image
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
             Painter:
                 id: _painter
                 locked: True
                 pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
         AnchorLayout:
             id: _gui_layout
             slide_info: _slide_info
@@ -102,7 +100,7 @@
                 font: '12sp'
                 canvas.before:
                     Color:
-                        rgba: (0, 0, 0, 1)
+                        rgba: (0, 0, 0, 0.7)
                     Rectangle:
                         pos: self.pos
                         size: self.size

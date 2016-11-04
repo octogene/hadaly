@@ -29,8 +29,10 @@ Config.set('kivy', 'log_level', 'debug')
 
 from kivy.app import App
 from kivy.core.window import Window
+from kivy.atlas import Atlas
+from kivy.event import EventDispatcher
 from kivy.properties import StringProperty, ListProperty, DictProperty
-from kivy.uix.screenmanager import ScreenManager, FadeTransition
+from kivy.uix.screenmanager import ScreenManager, FadeTransition, SwapTransition
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.factory import Factory
@@ -42,15 +44,12 @@ from kivy.network.urlrequest import UrlRequest
 from .search import ItemButton
 from kivy.uix.filechooser import FileChooserListView
 
-
 class HadalyApp(App):
-    presentation = DictProperty({'app': ('hadaly', app_version), 'title': '', 'slides': []})
+    presentation = DictProperty({'app': ('hadaly', app_version), 'title': 'New Title', 'slides': []})
 
-    slides_list = ListProperty()
+    filename = StringProperty(None)
 
-    filename = StringProperty('')
-
-    dirname = StringProperty('')
+    dirname = StringProperty(None)
 
     use_kivy_settings = True
 
@@ -94,19 +93,17 @@ class HadalyApp(App):
 
     def on_start(self):
         self.tempdir = tempfile.mkdtemp()
-        self.presentation['title'] = _('New Title')
         self.engines = json.load(open('hadaly/data/search_engines.json'))
         try:
             if argv[1].endswith('.opah'):
                 self.load_slides(os.path.dirname(argv[1]), [os.path.basename(argv[1])])
-                Logger.info('Application: file \'{file}\' loaded'.format(file=self.filename))
+                Logger.info('Application: File {file} loaded.'.format(file=self.filename))
                 if self.config.getint('general', 'switch_on_start') == 1:
                     self.root.current = 'viewer'
         except IndexError:
-            pass
+            Logger.debug('Application: {msg}'.format(msg = 'No file input'))
 
     def load_slides(self, path, filename):
-
         try:
             with tarfile.open(os.path.join(path, filename[0]), 'r:*') as tar:
                 tar.extractall(path=self.tempdir)
@@ -129,8 +126,7 @@ class HadalyApp(App):
             self.dirname = path
             self.filename = filename[0]
 
-            self.presentation = data
-            self.presentation_title = data['title']
+            self.presentation['slides'] = data['slides']
 
             for slide in reversed(self.presentation['slides']):
                 # TODO: Remove tmp in filename on save
@@ -147,50 +143,22 @@ class HadalyApp(App):
                                           year=slide['year']
                                           )
 
+                self.presentation['slides'][index]['texture_size'] = img_slide.texture_size
+
                 drag_slide = Factory.DraggableSlide(img=img_slide, app=self)
 
                 self.root.current_screen.slides_view.grid_layout.add_widget(drag_slide)
 
     def create_presentation(self):
-        '''Remove all slides, clear presentation and initialise a new one.
+        '''
+         - Remove all slides from Editor's Grid Layout & Viewer's Carousel.
+         - Empty slides list and restore presentation title to default value.
         '''
         self.root.current_screen.slides_view.grid_layout.clear_widgets()
         self.root.get_screen('viewer').carousel.clear_widgets()
-        self.presentation = {'app': ('hadaly', app_version), 'title': _('New Title'), 'slides': []}
+        del self.presentation.slides[:]
+        self.presentation.title = 'New Title'
         self.filename = self.dirname = ''
-
-    def update_presentation(self, type, old_index, new_index):
-        """
-        :param type: type of update to do : 'mv' (move) or 'rm' (remove) or 'update'
-        :param old_index: previous index of item in grid layout as an integer.
-        :param new_index: new index of item in grid layout as an integer.
-        """
-        if type == 'rm':
-            Logger.debug('Application: Removing presentation item.')
-            self.presentation['slides'].pop(old_index)
-            try:
-                self.root.get_screen('viewer').update_carousel()
-            except AttributeError:
-                Logger.debug('Application: Viewer dialog not yet added !')
-        elif type == 'mv':
-            Logger.debug('Application: Moving presentation item.')
-            try:
-                Logger.debug('Application: Moved {slide} at position (in grid layout) {index} to {new_index}'.format(
-                    slide=self.presentation['slides'][old_index],
-                    index=old_index, new_index=new_index))
-
-                item = self.presentation['slides'].pop(old_index)
-                self.presentation['slides'].insert(new_index, item)
-                try:
-                    self.root.get_screen('viewer').update_carousel()
-                except AttributeError:
-                    Logger.debug('Application: Viewer dialog not yet added !')
-            except TypeError:
-                Logger.exception('Application: Only one slide in presentation view. (BUG)')
-        elif type == 'update':
-            Logger.debug('Application: Updating presentation.')
-            self.presentation['slides'][old_index] = self.root.get_screen('editor').slides_view.grid_layout.children[
-                old_index].img.get_slide_info()
 
     def show_open(self):
         popup = Factory.OpenDialog()
@@ -235,6 +203,11 @@ class HadalyApp(App):
         self.dirname = path
 
         tar = tarfile.open(os.path.join(path, filename), 'a')
+
+        # images = [slide['img_src'] for slide in self.presentation['slides']]
+        # images_thumb = [slide['img_src'] for slide in self.presentation['slides']]
+        # Atlas.create('images', images+images_thumb, (7500, 6500))
+        # tar.add('images.atlas')
 
         # Add image file to *.opah file
         try:
@@ -424,7 +397,6 @@ class HadalyApp(App):
                 Logger.debug('Application: {src}'.format(src=slide.img.img_src))
                 slide.img.thumb_src = self.create_thumbnail(slide.img.img_src)
                 slide.img.update_texture_size()
-                self.update_presentation('update', 0, 0)
         self.root.current = 'editor'
 
     def get_flickr_url(self, photo, size):
@@ -541,7 +513,6 @@ class HadalyApp(App):
             Logger.exception('Application: Removing temp dir failed.')
         # # TODO: Check changes and ask user to save.
         pass
-
 
 class Manager(ScreenManager):
     def __init__(self, **kwargs):

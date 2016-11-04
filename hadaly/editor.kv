@@ -6,7 +6,7 @@
 <EditorScreen@Screen>:
     slides_view: _slides_view
     action_bar: _action_bar
-    EditorView:
+    BoxLayout:
         orientation: 'vertical'
         id: build_view
         ActionBar:
@@ -15,8 +15,6 @@
         SlidesView:
             id: _slides_view
 
-<EditorView@BoxLayout>:
-
 <EditorBar@ContextualActionView>:
     use_separator: True
     ActionPrevious:
@@ -24,7 +22,7 @@
         title:'Hadaly'
         with_previous: False
     ActionButton:
-        text: app.presentation['title']
+        text: app.presentation.title
         horizontal: root.center_y
         on_press: app.set_presentation_title()
     ActionButton:
@@ -32,8 +30,6 @@
         font_name: 'data/fonts/fontawesome-webfont.ttf'
         font_size: '20sp'
         text: u'\uf0fe'
-    ActionOverflow:
-        id: action_overflow
     ActionButton:
         on_press: app.root.current = 'search'
         font_name: 'data/fonts/fontawesome-webfont.ttf'
@@ -53,29 +49,31 @@
         size: (_save_as.texture_size[0] + 10, self.size[1])
         ActionButton:
             text: _('New')
-            on_release: action_group._dropdown.select(app.create_presentation())
+            on_press: app.create_presentation()
         ActionButton:
             text: _('Open')
-            on_release: action_group._dropdown.select(app.show_open())
+            on_press: app.show_open()
         ActionButton:
             text: _('Save')
-            on_release: action_group._dropdown.select(app.show_save('save'))
+            on_press: app.show_save('save')
         ActionButton:
             text: _('Save as...')
             id: _save_as
-            on_release: action_group._dropdown.select(app.show_save('save_as'))
+            on_press: app.show_save('save_as')
         ActionButton:
             text: _('Quit')
-            on_release: action_group._dropdown.select(app.stop())
+            on_press: app.stop()
 
 <SlidesView@FloatLayout>:
     app: app
     grid_layout: _grid_layout
+    modified: None
     BoxLayout:
         padding: [dp(20), dp(20), dp(20), dp(20)]
         ScrollView:
             do_scroll_x: False
             GridLayout:
+                app: app
                 spacing: dp(20)
                 cols: app.config.getint('editor', 'cols')
                 height: self.minimum_height
@@ -115,16 +113,18 @@
         valign: 'middle'
         background_color: [1, 1, 1, 0]
         border_color: [1,1,1,1]
-        on_press: root.show_info_panel()
+        on_press: root.show_info_panel(self.pos)
 
 
-<SlideInfo@BoxLayout>:
+<SlideInfo@Bubble>:
     artist: _artist
     title: _title
     year: _year
     font: '10sp'
+    arrow_pos:'left_mid'
     orientation:'vertical'
-    size_hint: 1, 0.45
+    size_hint: (None, None)
+    size: (dp(150), dp(60))
     SlideLabel:
         id: _artist
         font_size: root.font
@@ -219,10 +219,10 @@
     BoxLayout:
         orientation: 'vertical'
         TextInput:
-            text: app.presentation['title']
+            text: app.presentation.title
             multiline: False
             id: _pres_title
-            on_text: app.presentation['title'] = self.text
+            on_text: app.presentation.title = self.text
             on_text_validate: root.dismiss()
 
 
