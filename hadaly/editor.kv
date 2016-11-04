@@ -22,7 +22,7 @@
         title:'Hadaly'
         with_previous: False
     ActionButton:
-        text: app.presentation.title
+        text: app.presentation['title']
         horizontal: root.center_y
         on_press: app.set_presentation_title()
     ActionButton:
@@ -219,10 +219,10 @@
     BoxLayout:
         orientation: 'vertical'
         TextInput:
-            text: app.presentation.title
+            text: app.presentation['title']
             multiline: False
             id: _pres_title
-            on_text: app.presentation.title = self.text
+            on_text: app.presentation['title'] = self.text
             on_text_validate: root.dismiss()
 
 
