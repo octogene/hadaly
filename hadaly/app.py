@@ -24,13 +24,11 @@ import tarfile
 
 
 from kivy.config import Config
-# Config.set('graphics', 'fullscreen', 'auto')
+Config.set('graphics', 'fullscreen', 'auto')
 Config.set('kivy', 'log_level', 'debug')
 
 from kivy.app import App
 from kivy.core.window import Window
-from kivy.atlas import Atlas
-from kivy.event import EventDispatcher
 from kivy.properties import StringProperty, ListProperty, DictProperty
 from kivy.uix.screenmanager import ScreenManager, FadeTransition, SwapTransition
 from kivy.uix.popup import Popup
@@ -150,12 +148,15 @@ class HadalyApp(App):
                 self.root.current_screen.slides_view.grid_layout.add_widget(drag_slide)
 
     def create_presentation(self):
-        '''
-         - Remove all slides from Editor's Grid Layout & Viewer's Carousel.
-         - Empty slides list and restore presentation title to default value.
-        '''
+        """ Remove all slides from Editor's Grid Layout & Viewer's Carousel.
+            Empty slides list and restore presentation title to default value.
+        """
         self.root.current_screen.slides_view.grid_layout.clear_widgets()
-        self.root.get_screen('viewer').carousel.clear_widgets()
+        try:
+            self.root.get_screen('viewer').carousel.clear_widgets()
+        except AttributeError:
+            Logger.debug('Viewer screen not yet initialized, no widgets in '
+                         'carousel to remove.')
         del self.presentation.slides[:]
         self.presentation.title = 'New Title'
         self.filename = self.dirname = ''
@@ -181,7 +182,7 @@ class HadalyApp(App):
         If action == 'save', dialog is not shown and file is
         saved based on self.dirname and self.filename.
         """
-        if len(self.presentation['slides']) == 0:
+        if not self.presentation['slides']:
             self.show_popup(_('Error'), _('Nothing to save...'))
         else:
             if self.filename and action == 'save':
@@ -203,11 +204,6 @@ class HadalyApp(App):
         self.dirname = path
 
         tar = tarfile.open(os.path.join(path, filename), 'a')
-
-        # images = [slide['img_src'] for slide in self.presentation['slides']]
-        # images_thumb = [slide['img_src'] for slide in self.presentation['slides']]
-        # Atlas.create('images', images+images_thumb, (7500, 6500))
-        # tar.add('images.atlas')
 
         # Add image file to *.opah file
         try:
@@ -276,6 +272,7 @@ class HadalyApp(App):
             slide = SlideBox(slide=self.presentation['slides'][index])
             self.root.current_screen.box.add_widget(slide, 0)
             # Change scatter position to compensate screen split.
+            # TODO : Find and fix behavior.
             pos = self.root.current_screen.carousel.current_slide.viewer.pos
             self.root.current_screen.carousel.current_slide.viewer.pos = (pos[0] / 2, pos[1])
         elif action == 'rm':
@@ -305,7 +302,7 @@ class HadalyApp(App):
 
         :param slide: slide as object
         """
-        # Logger.debug('Application: Adding to presentation {slide}'.format(slide=slide.get_slide_info()))
+        Logger.debug('Application: Adding to presentation {slide}'.format(slide=slide.get_slide_info()))
         img_slide = DraggableSlide(img=slide, app=self)
         self.presentation['slides'].insert(0, slide.get_slide_info())
         self.root.get_screen('editor').slides_view.grid_layout.add_widget(img_slide)
@@ -399,29 +396,6 @@ class HadalyApp(App):
                 slide.img.update_texture_size()
         self.root.current = 'editor'
 
-    def get_flickr_url(self, photo, size):
-        """construct a source url to a flickr photo.
-
-        :param photo: photo information in json format.
-        :param size: desired size of the photo :
-            s	small square 75x75
-            q	large square 150x150
-            t	thumbnail, 100 on longest side
-            m	small, 240 on longest side
-            n	small, 320 on longest side
-            -	medium, 500 on longest side
-            z	medium 640, 640 on longest side
-            c	medium 800, 800 on longest side†
-            b	large, 1024 on longest side*
-            o	original image, either a jpg, gif or png, depending on source format
-        :return url:
-
-        """
-        url = 'https://farm{farm_id}.staticflickr.com/{server_id}/{id}_{secret}_{size}.jpg'
-        url = url.format(farm_id=photo['farm'], server_id=photo['server'], id=photo['id'],
-                         secret=photo['secret'], size=size)
-        return url
-
     def search_term(self, term, engine, page):
 
         params = urlencode({self.engines[engine]['params']['term']: term,
@@ -479,7 +453,6 @@ class HadalyApp(App):
                 self.show_popup(_('Error'), _('No results found.'))
                 return
 
-
             entries = reduce(dict.__getitem__, literal_eval(self.engines[urlparse(request.url).hostname]['results']['entries']), data)
             search_screen.box.total_pages = int(total_results / len(entries))
 
@@ -511,7 +484,7 @@ class HadalyApp(App):
             shutil.rmtree(self.tempdir, ignore_errors=True)
         except:
             Logger.exception('Application: Removing temp dir failed.')
-        # # TODO: Check changes and ask user to save.
+        # TODO: Check changes and ask user to save.
         pass
 
 class Manager(ScreenManager):

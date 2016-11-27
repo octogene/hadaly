@@ -172,7 +172,6 @@ class DraggableSlide(Magnet):
 
     def on_touch_up(self, touch, *args):
         grid_layout = self.app.root.current_screen.slides_view.grid_layout
-        print(self.parent)
 
         if self.collide_point(*touch.pos):
             self.delete_clock(touch)

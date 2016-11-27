@@ -4,6 +4,8 @@ from __future__ import division, unicode_literals, absolute_import
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scatter import Matrix
 from kivy.uix.scatterlayout import ScatterLayout
+from kivy.uix.carousel import Carousel
+from kivy.uix.progressbar import ProgressBar
 from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
@@ -22,22 +24,35 @@ class ViewerScreen(Screen):
     dialog = ObjectProperty(None)
     slides = ListProperty(None)
     stop = threading.Event()
+    carousel = ObjectProperty(None)
 
     def on_pre_enter(self, *args):
+        if not self.carousel:
+            self.loading_dialog = Popup(title=_('Loading..'), size_hint=(0.5, 0.2), content=ProgressBar(id='_pb', max=100), auto_dismiss=False)
+            self.loading_dialog.open()
         if not self.dialog:
             self.dialog = Factory.SlidesDialog()
             self.start_loading_slides(self.app.presentation.slides)
             if not platform == 'android':
                 Logger.info('Viewer : Adapting carousel to platform ({platform})'.format(platform=platform))
-                self.carousel.scroll_timeout = 2
+
 
     def start_loading_slides(self, value):
         threading.Thread(target=self.loading_slides, args=(value,)).start()
 
     def loading_slides(self, value):
-        [self.carousel.add_widget(SlideBox(slide=slide)) for slide in reversed(value)]
-        [self.dialog.grid.add_widget(Factory.SlideButton(source=slide['thumb_src'], keep_ratio=True, )) for slide in reversed(value)]
+        self.carousel = Carousel(direction='right', loop=False, anim_move_duration=0.25, scroll_timeout = 2)
+        slides_to_load = [slide for slide in reversed(value)]
+        for slide in slides_to_load:
+            self.carousel.add_widget(SlideBox(slide=slide))
+            self.dialog.grid.add_widget(Factory.SlideButton(source=slide['thumb_src'], keep_ratio=True))
+            self.loading_dialog.content.value = self.loading_dialog.content.value + (100 / len(value))
+
+
+        self.loading_dialog.dismiss()
+        del self.loading_dialog
         self.app.root.get_screen('editor').slides_view.bind(modified=self.update_slides)
+        self.box.add_widget(self.carousel)
 
     def update_slides(self, instance, value):
         c_index = list(reversed(range(len(self.carousel.slides))))
