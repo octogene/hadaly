@@ -43,7 +43,8 @@ from .search import ItemButton
 from kivy.uix.filechooser import FileChooserListView
 
 class HadalyApp(App):
-    presentation = DictProperty({'app': ('hadaly', app_version), 'title': 'New Title', 'slides': []})
+    presentation = DictProperty({'app': ('hadaly', app_version),
+                                 'title': 'New Title', 'slides': []})
 
     filename = StringProperty(None)
 
@@ -94,8 +95,10 @@ class HadalyApp(App):
         self.engines = json.load(open('hadaly/data/search_engines.json'))
         try:
             if argv[1].endswith('.opah'):
-                self.load_slides(os.path.dirname(argv[1]), [os.path.basename(argv[1])])
-                Logger.info('Application: File {file} loaded.'.format(file=self.filename))
+                self.load_slides(os.path.dirname(argv[1]),
+                                 [os.path.basename(argv[1])])
+                Logger.info('Application: File '
+                            '{file} loaded.'.format(file=self.filename))
                 if self.config.getint('general', 'switch_on_start') == 1:
                     self.root.current = 'viewer'
         except IndexError:
@@ -112,14 +115,16 @@ class HadalyApp(App):
             Logger.debug('Application: {msg}'.format(msg=msg))
             self.show_popup(_('Error'), _('No file selected'))
         else:
-            if len(self.root.current_screen.slides_view.grid_layout.children) > 0:
+            if len(self.editorscreen.slides_view.grid_layout.children) > 0:
                 self.create_presentation()
 
             try:
-                with open(os.path.join(self.tempdir, 'presentation.json'), 'r') as fd:
+                with open(os.path.join(self.tempdir,
+                                       'presentation.json'), 'r') as fd:
                     data = json.load(fd)
             except ValueError as msg:
-                Logger.debug('Application (JSON Loading): {msg}'.format(msg=msg))
+                Logger.debug('Application (JSON Loading):'
+                             ' {msg}'.format(msg=msg))
 
             self.dirname = path
             self.filename = filename[0]
@@ -145,7 +150,7 @@ class HadalyApp(App):
 
                 drag_slide = Factory.DraggableSlide(img=img_slide, app=self)
 
-                self.root.current_screen.slides_view.grid_layout.add_widget(drag_slide)
+                self.editorscreen.slides_view.grid_layout.add_widget(drag_slide)
 
     def create_presentation(self):
         """ Remove all slides from Editor's Grid Layout & Viewer's Carousel.
@@ -158,7 +163,7 @@ class HadalyApp(App):
             Logger.debug('Viewer screen not yet initialized, no widgets in '
                          'carousel to remove.')
         del self.presentation.slides[:]
-        self.presentation.title = 'New Title'
+        self.presentation.title = _('New Title')
         self.filename = self.dirname = ''
 
     def show_open(self):
@@ -167,7 +172,10 @@ class HadalyApp(App):
 
     def show_file_explorer(self):
         popup = Popup(size_hint=(0.8, 0.8))
-        file_explorer = FileChooserListView(filters=['*.jpg', '*.png', '*.jpeg'])
+        file_explorer = FileChooserListView(filters=['*.jpg',
+                                                     '*.png',
+                                                     '*.jpeg'
+                                                     ])
         if os.path.exists(self.config.get('editor', 'last_dir')):
             file_explorer.path = self.config.get('editor', 'last_dir')
         file_explorer.bind(on_submit=self.show_add_slide)
@@ -212,10 +220,12 @@ class HadalyApp(App):
                     tar.add(os.path.relpath(file['img_src']),
                             arcname=os.path.basename(file['img_src']))
                 else:
-                    tar.add(os.path.relpath(os.path.join(self.tempdir, file['img_src'])),
+                    tar.add(os.path.relpath(os.path.join(self.tempdir,
+                                                         file['img_src'])),
                             arcname=os.path.basename(file['img_src']))
                 if os.path.exists(file['thumb_src']):
-                    tar.add(os.path.relpath(os.path.join(self.tempdir, file['thumb_src'])),
+                    tar.add(os.path.relpath(os.path.join(self.tempdir,
+                                                         file['thumb_src'])),
                             arcname=os.path.basename(file['thumb_src']))
                 else:
                     tar.add(os.path.relpath(file['thumb_src']),
@@ -227,20 +237,23 @@ class HadalyApp(App):
 
         # Create json file with slides metadata
         for slide in self.presentation['slides']:
-            Logger.debug('Save: thumb {thumb} from img {img}'.format(thumb=slide['thumb_src'],
-                                                                     img=slide['img_src']))
+            Logger.debug('Save: thumb {thumb} '
+                         'from img {img}'.format(thumb=slide['thumb_src'],
+                                                 img=slide['img_src']))
             slide['img_src'] = os.path.basename(slide['img_src'])
             slide['thumb_src'] = os.path.basename(slide['thumb_src'])
 
         try:
-            with open(os.path.join(self.tempdir, 'presentation.json'), 'w') as fd:
+            with open(os.path.join(self.tempdir,
+                                   'presentation.json'), 'w') as fd:
                 json.dump(self.presentation, fd)
         except IOError as msg:
             Logger.debug('Application: {msg}'.format(msg=msg[1]))
             self.show_popup('Error', msg[1])
 
         # Add json file to *.opah file
-        tar.add(os.path.join(self.tempdir, 'presentation.json'), 'presentation.json')
+        tar.add(os.path.join(self.tempdir,
+                             'presentation.json'), 'presentation.json')
         tar.close()
 
     def switch_slide(self, index):
@@ -288,9 +301,11 @@ class HadalyApp(App):
         """Show dialog to add a slide.
         """
         original_src.popup.dismiss()
-        self.config.set('editor', 'last_dir', os.path.dirname(original_src.selection[0]))
-        thumb_src = self.create_thumbnail(original_src.selection[0])
-        slide_popup = SlideInfoDialog(slide=Slide(img_src=original_src.selection[0],
+        img_src = original_src.selection[0]
+        self.config.set('editor', 'last_dir',
+                        os.path.dirname(img_src))
+        thumb_src = self.create_thumbnail(img_src)
+        slide_popup = SlideInfoDialog(slide=Slide(img_src=img_src,
                                                   thumb_src=thumb_src,
                                                   artist='',
                                                   title='',
@@ -302,10 +317,11 @@ class HadalyApp(App):
 
         :param slide: slide as object
         """
-        Logger.debug('Application: Adding to presentation {slide}'.format(slide=slide.get_slide_info()))
+        Logger.debug('Application: Adding to presentation'
+                     ' {slide}'.format(slide=slide.get_slide_info()))
         img_slide = DraggableSlide(img=slide, app=self)
         self.presentation['slides'].insert(0, slide.get_slide_info())
-        self.root.get_screen('editor').slides_view.grid_layout.add_widget(img_slide)
+        self.editorscreen.slides_view.grid_layout.add_widget(img_slide)
 
     def create_thumbnail(self, img_src):
         Logger.debug('Creating thumbnail from {src}'.format(src=img_src))
@@ -317,7 +333,8 @@ class HadalyApp(App):
         thumb_filename = ''.join(('thumb_', os.path.basename(img_src)))
         thumb_src = os.path.join(self.tempdir, thumb_filename)
         image.save(thumb_src)
-        Logger.debug('Application: Thumbnail created at {thumb}'.format(thumb=thumb_src))
+        Logger.debug('Application: Thumbnail created'
+                     ' at {thumb}'.format(thumb=thumb_src))
         return thumb_src
 
     def show_popup(self, type, msg):
@@ -331,7 +348,8 @@ class HadalyApp(App):
 
     def switch_to_viewer(self):
         if not self.presentation['slides']:
-            self.show_popup(_('Error'), _('Presentation is empty...\n Please add a slide first.'))
+            self.show_popup(_('Error'), _('Presentation is empty...\n '
+                                          'Please add a slide first.'))
         else:
             self.root.current = 'viewer'
 
@@ -365,12 +383,16 @@ class HadalyApp(App):
     def download_img(self, url, slide, wait=False):
         pb = ProgressBar(id='_pb')
         self.progress_dialog = Popup(title=_('Downloading...'),
-                                     size_hint=(0.5, 0.2), content=pb, auto_dismiss=False)
+                                     size_hint=(0.5, 0.2),
+                                     content=pb, auto_dismiss=False)
         url = quote(url, safe="%/:=&?~#+!$,;'@()*[]")
         path = os.path.join(self.tempdir,
                             os.path.basename(urlparse(url).path))
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0"}
-        req = UrlRequest(url, self.reload_slide, file_path=path, on_progress=self.show_download_progress,
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 5.1; rv:31.0) "
+                                 "Gecko/20100101 Firefox/31.0"}
+        req = UrlRequest(url, self.reload_slide,
+                         file_path=path,
+                         on_progress=self.show_download_progress,
                          req_headers=headers, debug=True)
         self.progress_dialog.open()
 
@@ -385,107 +407,130 @@ class HadalyApp(App):
         slide_path = urlparse(request.url)
         filename = os.path.basename(slide_path[2])
 
-        slides = [slide for slide in self.root.get_screen('editor').slides_view.grid_layout.children]
+        slides = [slide for slide in
+                  self.editorscreen.slides_view.grid_layout.children]
         for slide in slides:
             img_src = urlparse(slide.img.img_src)
             if img_src[0] == 'http' and img_src[2].endswith(filename):
-                Logger.debug('Application: Found slide ! Updating image source...')
+                Logger.debug('Application: Found slide ! '
+                             'Updating image source...')
                 slide.img.img_src = os.path.join(self.tempdir, filename)
                 Logger.debug('Application: {src}'.format(src=slide.img.img_src))
                 slide.img.thumb_src = self.create_thumbnail(slide.img.img_src)
                 slide.img.update_texture_size()
         self.root.current = 'editor'
 
-    def search_term(self, term, engine, page):
+    def search_term(self, term, engine_name, page):
+        engine = self.engines[engine_name]
+        rpp = self.config.get('search', 'search_rpp')
 
-        params = urlencode({self.engines[engine]['params']['term']: term,
-                            self.engines[engine]['params']['rpp']: self.config.get('search', 'search_rpp'),
-                            self.engines[engine]['params']['page']: page})
+        params = urlencode({engine['params']['term']: term,
+                            engine['params']['rpp']: rpp,
+                            engine['params']['page']: page})
 
-        url = ''.join((self.engines[engine]['base_url'], params))
+        url = ''.join((engine['base_url'], params))
 
         UrlRequest(url, on_success=self.parse_results, debug=True)
 
     def parse_results(self, request, data):
         search_screen = self.root.get_screen('search')
+        engine = self.engines[urlparse(request.url).hostname]
+        total_pages = search_screen.box.total_pages
         results = []
 
-        if self.engines[urlparse(request.url).hostname]['results']['format'] == 'html':
+        if engine['results']['format'] == 'html':
             tree = html.fromstring(data)
 
             try:
-                total_results = re.sub("[^0-9]", "", tree.xpath(self.engines[urlparse(request.url).hostname]['results']['total_results'])[0])
+                total_results = re.sub("[^0-9]", "",
+                                       tree.xpath(engine['results']
+                                                  ['total_results'])[0])
                 if not total_results or int(total_results) == 0:
                     raise ValueError
             except ValueError:
                 self.show_popup(_('Error'), _('No results found.'))
                 return
 
-            if isinstance(tree.xpath(self.engines[urlparse(request.url).hostname]['results']['total_pages']), list):
-                search_screen.box.total_pages = tree.xpath(self.engines[urlparse(request.url).hostname]['results']['total_pages'])[0]
+            if isinstance(tree.xpath(engine['results']['total_pages']), list):
+                total_pages = tree.xpath(engine['results']['total_pages'])[0]
             else:
-                search_screen.box.total_pages = tree.xpath(self.engines[urlparse(request.url).hostname]['results']['total_pages'])
+                total_pages = tree.xpath(engine['results']['total_pages'])
 
-
-            for entry in tree.xpath(self.engines[urlparse(request.url).hostname]['results']['entries']):
-                artist = entry.xpath(self.engines[urlparse(request.url).hostname]['results']['artist'])[0]
-                title = entry.xpath(self.engines[urlparse(request.url).hostname]['results']['title'])[0]
-                date = entry.xpath(self.engines[urlparse(request.url).hostname]['results']['date'])[0]
-                thumb = entry.xpath(self.engines[urlparse(request.url).hostname]['results']['thumb'])[0]
-                obj_link = entry.xpath(self.engines[urlparse(request.url).hostname]['results']['obj_link'])[0]
+            for entry in tree.xpath(engine['results']['entries']):
+                artist = entry.xpath(engine['results']['artist'])[0]
+                title = entry.xpath(engine['results']['title'])[0]
+                date = entry.xpath(engine['results']['date'])[0]
+                thumb = entry.xpath(engine['results']['thumb'])[0]
+                obj_link = entry.xpath(engine['results']['obj_link'])[0]
 
                 results.append({'title': title,
                                 'artist': artist,
                                 'year': date,
-                                'thumb': quote(thumb, safe="%/:=&?~#+!$,;'@()*[]"),
+                                'thumb': quote(thumb,
+                                               safe="%/:=&?~#+!$,;'@()*[]"),
                                 'obj_link': obj_link}
                                )
 
-        elif self.engines[urlparse(request.url).hostname]['results']['format'] == 'json':
+        elif engine['results']['format'] == 'json':
             from ast import literal_eval
             from functools import reduce
 
             try:
-                total_results = reduce(dict.__getitem__, literal_eval(self.engines[urlparse(request.url).hostname]['results']['total_results']), data)
+                total_results = reduce(dict.__getitem__,
+                                       literal_eval(engine['results']
+                                                    ['total_results']), data)
                 if int(total_results) == 0:
                     raise ValueError
             except ValueError:
                 self.show_popup(_('Error'), _('No results found.'))
                 return
 
-            entries = reduce(dict.__getitem__, literal_eval(self.engines[urlparse(request.url).hostname]['results']['entries']), data)
+            entries = reduce(dict.__getitem__,
+                             literal_eval(engine['results']['entries']), data)
             search_screen.box.total_pages = int(total_results / len(entries))
 
             for entry in entries:
-                artist = reduce(dict.__getitem__, literal_eval(self.engines[urlparse(request.url).hostname]['results']['artist']), entry)
-                title = reduce(dict.__getitem__, literal_eval(self.engines[urlparse(request.url).hostname]['results']['title']), entry)
-                date = reduce(dict.__getitem__, literal_eval(self.engines[urlparse(request.url).hostname]['results']['date']), entry)
-                thumb = reduce(dict.__getitem__, literal_eval(self.engines[urlparse(request.url).hostname]['results']['thumb']), entry)
-                obj_link = reduce(dict.__getitem__, literal_eval(self.engines[urlparse(request.url).hostname]['results']['obj_link']), entry)
+                artist = reduce(dict.__getitem__,
+                                literal_eval(engine['results']['artist']),
+                                entry)
+                title = reduce(dict.__getitem__,
+                               literal_eval(engine['results']['title']), entry)
+                date = reduce(dict.__getitem__,
+                              literal_eval(engine['results']['date']), entry)
+                thumb = reduce(dict.__getitem__,
+                               literal_eval(engine['results']['thumb']), entry)
+                obj_link = reduce(dict.__getitem__,
+                                  literal_eval(engine['results']['obj_link']),
+                                  entry)
 
                 results.append({'title': title,
                                 'artist': artist,
                                 'year': date,
-                                'thumb': quote(thumb, safe="%/:=&?~#+!$,;'@()*[]"),
+                                'thumb': quote(thumb,
+                                               safe="%/:=&?~#+!$,;'@()*[]"),
                                 'obj_link': obj_link}
                                )
 
         for photo in results:
             Logger.debug('Search : Loading {url}'.format(url=photo['thumb']))
-            image = ItemButton(photo=photo, source=photo['thumb'], keep_ratio=True)
+            image = ItemButton(photo=photo,
+                               source=photo['thumb'], keep_ratio=True)
             search_screen.box.grid.add_widget(image)
 
-        search_screen.box.status = _('Page {page} on {total_page}').format(page=search_screen.box.current_page,
-                                                                        total_page=search_screen.box.total_pages)
+        current_page = search_screen.box.current_page
+        search_screen.box.status = _('Page {page} on {total_page}'
+                                     ).format(page=current_page,
+                                              total_page=total_pages)
 
     def on_stop(self):
         self.config.set('editor', 'last_dir', None)
         try:
             shutil.rmtree(self.tempdir, ignore_errors=True)
-        except:
+        except IOError:
             Logger.exception('Application: Removing temp dir failed.')
         # TODO: Check changes and ask user to save.
         pass
+
 
 class Manager(ScreenManager):
     def __init__(self, **kwargs):

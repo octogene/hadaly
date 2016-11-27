@@ -64,8 +64,6 @@ class Slide(BoxLayout):
 
     def show_info_panel(self, pos):
         if not self.info_panel:
-        #     self.info_panel = False
-        # elif not self.info_panel:
             self.info_panel = True
 
             info_panel = Factory.SlideInfo(id='info_panel')
@@ -76,6 +74,7 @@ class Slide(BoxLayout):
             info_panel.year.text = self.year
             info_panel.pos = self.to_window(*(pos[0], pos[1] - dp(20)))
             self.app.root.current_screen.add_widget(info_panel)
+
 
 class SlideInfoDialog(Popup):
     slide = ObjectProperty(None)
