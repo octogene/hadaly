@@ -13,11 +13,13 @@ from kivy.uix.stencilview import StencilView
 from kivy.uix.popup import Popup
 from kivy.uix.button import ButtonBehavior
 from kivy.factory import Factory
-from kivy.properties import ObjectProperty, BooleanProperty, DictProperty, ListProperty, NumericProperty
+from kivy.properties import (ObjectProperty, BooleanProperty,
+                             DictProperty, ListProperty, NumericProperty)
 from kivy.logger import Logger
 from kivy.utils import platform
 from kivy.uix.colorpicker import ColorPicker
 import threading
+
 
 class ViewerScreen(Screen):
     app = ObjectProperty(None)
@@ -28,75 +30,85 @@ class ViewerScreen(Screen):
 
     def on_pre_enter(self, *args):
         if not self.carousel:
-            self.loading_dialog = Popup(title=_('Loading..'), size_hint=(0.5, 0.2), content=ProgressBar(id='_pb', max=100), auto_dismiss=False)
+            self.loading_dialog = Popup(title=_('Loading..'),
+                                        size_hint=(0.5, 0.2),
+                                        content=ProgressBar(id='_pb', max=100),
+                                        auto_dismiss=False)
             self.loading_dialog.open()
         if not self.dialog:
             self.dialog = Factory.SlidesDialog()
             self.start_loading_slides(self.app.presentation.slides)
             if not platform == 'android':
-                Logger.info('Viewer : Adapting carousel to platform ({platform})'.format(platform=platform))
+                Logger.info('Viewer : Adapting carousel to'
+                            ' platform ({platform})'.format(platform=platform))
 
 
     def start_loading_slides(self, value):
         threading.Thread(target=self.loading_slides, args=(value,)).start()
 
     def loading_slides(self, value):
-        self.carousel = Carousel(direction='right', loop=False, anim_move_duration=0.25, scroll_timeout = 2)
+        self.carousel = Carousel(direction='right', loop=False,
+                                 anim_move_duration=0.25, scroll_timeout = 2)
         slides_to_load = [slide for slide in reversed(value)]
         for slide in slides_to_load:
             self.carousel.add_widget(SlideBox(slide=slide))
-            self.dialog.grid.add_widget(Factory.SlideButton(source=slide['thumb_src'], keep_ratio=True))
-            self.loading_dialog.content.value = self.loading_dialog.content.value + (100 / len(value))
-
+            slide_button = Factory.SlideButton(source=slide['thumb_src'],
+                                               keep_ratio=True)
+            self.dialog.grid.add_widget(slide_button)
+            self.loading_dialog.content.value += 100 / len(value)
 
         self.loading_dialog.dismiss()
         del self.loading_dialog
-        self.app.root.get_screen('editor').slides_view.bind(modified=self.update_slides)
+        self.app.editorscreen.slides_view.bind(modified=self.update_slides)
         self.box.add_widget(self.carousel)
 
     def update_slides(self, instance, value):
         c_index = list(reversed(range(len(self.carousel.slides))))
         if value[0] == 'mv':
-            self.carousel.slides.insert(c_index[value[1][1]],
-                                        self.carousel.slides.pop(c_index[value[1][0]]))
+            to_move = self.carousel.slides.pop(c_index[value[1][0]])
+            self.carousel.slides.insert(c_index[value[1][1]], to_move)
         elif value[0] == 'rm':
             self.carousel.slides.pop(c_index[value.modified[1][0]])
         elif value[0] == 'add':
+            # TODO : Update viewer when slide added
             pass
+
 
 class TouchActionArea(FloatLayout):
 
     def on_touch_down(self, touch):
 
-        if self.collide_point(*touch.pos) and touch.is_double_tap and len(self.app.presentation.slides) > 0:
-            try:
-                child = [child for child in self.children if child.collide_point(*touch.pos)][0]
-            except IndexError:
-                Logger.debug('Viewer: No TouchActionArea child touched.')
-                return
-            if child.name == 'center':
-                if len(self.app.root.current_screen.box.children) < 2:
-                        Logger.info('Viewer: Switching to compare mode.')
-                        self.parent.dialog.to_switch = False
-                        self.parent.dialog.title = _('Compare to...')
-                        self.parent.dialog.open()
-                else:
-                    self.app.compare_slide(action='rm')
-                    touch.ungrab(self)
-                return True
+        if self.collide_point(*touch.pos) and touch.is_double_tap:
+            if len(self.app.presentation.slides) > 0:
+                try:
+                    child = [child for child in self.children
+                             if child.collide_point(*touch.pos)][0]
+                except IndexError:
+                    Logger.debug('Viewer: No TouchActionArea child touched.')
+                    return
+                if child.name == 'center':
+                    if len(self.app.root.current_screen.box.children) < 2:
+                            Logger.info('Viewer: Switching to compare mode.')
+                            self.parent.dialog.to_switch = False
+                            self.parent.dialog.title = _('Compare to...')
+                            self.parent.dialog.open()
+                    else:
+                        self.app.compare_slide(action='rm')
+                        touch.ungrab(self)
+                    return True
 
-            elif child.name == 'ltop':
-                self.app.root.current = 'editor'
-                return True
-            elif child.name == 'rtop':
-                pass
-            elif child.name == 'lbottom':
-                pass
-            elif child.name == 'rbottom':
-                self.parent.dialog.to_switch = True
-                self.parent.dialog.title = _('Switch to...')
-                self.parent.dialog.open()
-                return False
+                elif child.name == 'ltop':
+                    self.app.root.current = 'editor'
+                    return True
+                elif child.name == 'rtop':
+                    pass
+                elif child.name == 'lbottom':
+                    pass
+                elif child.name == 'rbottom':
+                    self.parent.dialog.to_switch = True
+                    self.parent.dialog.title = _('Switch to...')
+                    self.parent.dialog.open()
+                    return False
 
         return super(TouchActionArea, self).on_touch_down(touch)
 
@@ -122,7 +134,8 @@ class SlideBox(BoxLayout, StencilView):
 
     def on_size(self, *args):
 
-        self.gui_layout.slide_info.font = ''.join((str(int(self.height / 45)), 'sp'))
+        self.gui_layout.slide_info.font = ''.join((str(int(self.height / 45)),
+                                                   'sp'))
 
     def get_caption(self):
 
@@ -133,6 +146,7 @@ class SlideBox(BoxLayout, StencilView):
         caption = ' - '.join((artist, title, year))
 
         return caption
+
 
 class SlideViewer(ScatterLayout):
     image = ObjectProperty(None)
@@ -163,53 +177,59 @@ class SlideViewer(ScatterLayout):
         if value > 1:
             if all(child.id != 'img_zoom' for child in self.parent.children):
                 # TODO: Change thumbnail position and size based on config.
-                thumb = ImgFullZoom(source=self.parent.parent.slide['thumb_src'],
-                              id='img_zoom')
+                thumb_src = self.parent.parent.slide['thumb_src']
+                thumb = ImgFullZoom(source=thumb_src, id='img_zoom')
+                thumb_pos = self.app.config.get('viewer', 'thumb_pos')
 
-                if self.app.config.get('viewer', 'thumb_pos') == 'bottom left':
+                if thumb_pos == 'bottom left':
                     thumb.pos = [0, self.parent.height / 15]
-                elif self.app.config.get('viewer', 'thumb_pos') == 'top left':
+                elif thumb_pos == 'top left':
                     thumb.pos = [0, self.parent.height - thumb.texture_size[1]]
-                elif self.app.config.get('viewer', 'thumb_pos') == 'top right':
-                    thumb.pos = [self.parent.width - thumb.texture_size[0], self.parent.height - thumb.texture_size[1]]
-                elif self.app.config.get('viewer', 'thumb_pos') == 'bottom right':
+                elif thumb_pos == 'top right':
+                    thumb.pos = [self.parent.width - thumb.texture_size[0],
+                                 self.parent.height - thumb.texture_size[1]]
+                elif thumb_pos == 'bottom right':
+                    # TODO
                     pass
-
                 self.parent.add_widget(thumb)
         elif not all(child.id != 'img_zoom' for child in self.parent.children):
             try:
-                img_zoom = [child for child in self.parent.children if child.id == 'img_zoom'][0]
+                img_zoom = [child for child in self.parent.children
+                            if child.id == 'img_zoom'][0]
                 self.parent.remove_widget(img_zoom)
             except IndexError:
                 Logger.debug('Viewer: No img_zoom to remove.')
 
     def lock(self):
+        toolbar = self.slidebox.toolbar
         if not self.locked:
             Logger.info('Viewer: Locking Slide.')
             self.locked = True
             self.do_rotation = False
             self.do_scale = False
             self.do_translation = False
-            self.slidebox.toolbar.add_widget(PainterToolBar(painter=self.painter,
-                                                            paint_color=self.painter.tools[self.painter.current_tool][
-                                                                'color']))
-            self.app.root.get_screen('viewer').carousel.scroll_timeout = 20
-            self.app.root.get_screen('viewer').carousel.scroll_distance = '50dp'
+            color = self.painter.tools[self.painter.current_tool]['color']
+            toolbar.add_widget(PainterToolBar(painter=self.painter,
+                                              paint_color=color))
+            self.app.viewerscreen.carousel.scroll_timeout = 20
+            self.app.viewerscreen.carousel.scroll_distance = '50dp'
         elif self.locked:
             Logger.info('Viewer: Unlocking Slide.')
             self.locked = False
             self.do_scale = True
             self.do_translation = True
             self.do_rotation = True
-            self.slidebox.toolbar.remove_widget(self.slidebox.toolbar.children[0])
-            self.app.root.get_screen('viewer').carousel.scroll_timeout = 2
-            self.app.root.get_screen('viewer').carousel.scroll_distance = '20dp'
+            toolbar.remove_widget(self.slidebox.toolbar.children[0])
+            self.app.viewerscreen.carousel.scroll_timeout = 2
+            self.app.viewerscreen.carousel.scroll_distance = '20dp'
 
     def on_locked(self, *args):
-        self.slidebox.toolbar.lock_btn.text = {u'\uf13e': u'\uf023', u'\uf023': u'\uf13e'}[
-            self.slidebox.toolbar.lock_btn.text]
+        lock_icon_switch = {u'\uf13e': u'\uf023', u'\uf023': u'\uf13e'}
+        current_icon = self.slidebox.toolbar.lock_btn.text
+        self.slidebox.toolbar.lock_btn.text = lock_icon_switch[current_icon]
         if self.painter:
             self.painter.locked = {True: False, False: True}[self.locked]
+
 
 class PainterToolBar(BoxLayout):
     painter = ObjectProperty(None)
@@ -225,10 +245,12 @@ class PainterToolBar(BoxLayout):
         popup.open()
 
     def on_color(self, instance, value):
-        self.paint_color = self.painter.tools[self.painter.current_tool]['color'] = value
+        tool = self.painter.current_tool
+        self.paint_color = self.painter.tools[tool]['color'] = value
 
     def on_thickness(self, instance, value):
-        self.painter.tools[self.painter.current_tool]['thickness'] = value
+        tool = self.painter.current_tool
+        self.painter.tools[tool]['thickness'] = value
 
 
 class SlidesDialog(Popup):
