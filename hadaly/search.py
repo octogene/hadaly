@@ -1,23 +1,20 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, unicode_literals, absolute_import
-
+from lxml import html
 from urllib.parse import urlparse, parse_qs
 from urllib.request import urlopen
-from lxml import html
 
-
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.image import AsyncImage
-from kivy.uix.button import ButtonBehavior, Button
-from kivy.properties import DictProperty, ObjectProperty, StringProperty
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
 from kivy.core.window import Window
-from .editor import Slide
 from kivy.logger import Logger
-from kivy.uix.screenmanager import Screen
 from kivy.metrics import dp
+from kivy.properties import DictProperty, ObjectProperty, StringProperty
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import ButtonBehavior
+from kivy.uix.image import AsyncImage
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.uix.screenmanager import Screen
 
+from .editor import Slide
 
 
 class SearchScreen(Screen):

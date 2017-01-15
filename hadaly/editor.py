@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, unicode_literals, absolute_import
-
 import os
 from functools import partial
+from PIL import Image
 
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.popup import Popup
+from kivy.clock import Clock
+from kivy.config import Config
+from kivy.factory import Factory
+from kivy.graphics.opengl import GL_MAX_TEXTURE_SIZE, glGetIntegerv
+from kivy.logger import Logger
+from kivy.metrics import dp
 from kivy.properties import (StringProperty, ObjectProperty,
                              NumericProperty, BooleanProperty, DictProperty)
+from kivy.uix.popup import Popup
+
 from .magnet import Magnet
-from kivy.clock import Clock
-from kivy.logger import Logger
-from kivy.config import Config
-from PIL import Image
-from kivy.graphics.opengl import GL_MAX_TEXTURE_SIZE, glGetIntegerv
-from kivy.factory import Factory
-from kivy.metrics import dp
 
 
 class Slide(BoxLayout):

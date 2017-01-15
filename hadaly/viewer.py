@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, unicode_literals, absolute_import
+import threading
 
-from kivy.uix.screenmanager import Screen
-from kivy.uix.scatter import Matrix
-from kivy.uix.scatterlayout import ScatterLayout
-from kivy.uix.carousel import Carousel
-from kivy.uix.progressbar import ProgressBar
-from kivy.uix.image import Image
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.stencilview import StencilView
-from kivy.uix.popup import Popup
-from kivy.uix.button import ButtonBehavior
 from kivy.factory import Factory
+from kivy.logger import Logger
 from kivy.properties import (ObjectProperty, BooleanProperty,
                              DictProperty, ListProperty, NumericProperty)
-from kivy.logger import Logger
-from kivy.utils import platform
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import ButtonBehavior
+from kivy.uix.carousel import Carousel
 from kivy.uix.colorpicker import ColorPicker
-import threading
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.image import Image
+from kivy.uix.popup import Popup
+from kivy.uix.progressbar import ProgressBar
+from kivy.uix.scatter import Matrix
+from kivy.uix.scatterlayout import ScatterLayout
+from kivy.uix.screenmanager import Screen
+from kivy.uix.stencilview import StencilView
+from kivy.utils import platform
 
 
 class ViewerScreen(Screen):
@@ -41,7 +40,6 @@ class ViewerScreen(Screen):
             if not platform == 'android':
                 Logger.info('Viewer : Adapting carousel to'
                             ' platform ({platform})'.format(platform=platform))
-
 
     def start_loading_slides(self, value):
         threading.Thread(target=self.loading_slides, args=(value,)).start()
