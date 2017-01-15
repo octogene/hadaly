@@ -1,46 +1,41 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, unicode_literals, absolute_import
+# from __future__ import division, unicode_literals, absolute_import
 import shutil
-
-from kivy import require
-
-require('1.9.1')
-
-import os, json
-from sys import argv
-
-from .meta import version as app_version
-from urllib.parse import urlencode
+import os
+import json
 import re
-
+import tarfile
+import tempfile
+from urllib.parse import urlencode
 from urllib.parse import urlparse
 from urllib.parse import quote
-
 from lxml import html
-import tempfile
-
+from sys import argv
 from PIL import Image
-import tarfile
 
-
-from kivy.config import Config
-Config.set('graphics', 'fullscreen', 'auto')
-Config.set('kivy', 'log_level', 'debug')
-
+from kivy import require
 from kivy.app import App
 from kivy.core.window import Window
-from kivy.properties import StringProperty, ListProperty, DictProperty
-from kivy.uix.screenmanager import ScreenManager, FadeTransition, SwapTransition
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
+from kivy.config import Config
 from kivy.factory import Factory
-from kivy.uix.progressbar import ProgressBar
-from .editor import Slide, SlideInfoDialog, DraggableSlide
-from .viewer import SlideBox
 from kivy.logger import Logger
+from kivy.properties import StringProperty, DictProperty
 from kivy.network.urlrequest import UrlRequest
-from .search import ItemButton
 from kivy.uix.filechooser import FileChooserListView
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.uix.progressbar import ProgressBar
+from kivy.uix.screenmanager import ScreenManager, FadeTransition
+
+from .editor import Slide, SlideInfoDialog, DraggableSlide
+from .meta import version as app_version
+from .search import ItemButton
+from .viewer import SlideBox
+
+Config.set('graphics', 'fullscreen', 'auto')
+Config.set('kivy', 'log_level', 'debug')
+require('1.9.1')
+
 
 class HadalyApp(App):
     presentation = DictProperty({'app': ('hadaly', app_version),
