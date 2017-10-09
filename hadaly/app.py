@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, unicode_literals, absolute_import
 import shutil
 
 from kivy import require
@@ -13,10 +12,6 @@ from .meta import version as app_version
 import urllib
 import re
 
-try:
-    from urlparse import urlparse
-except ImportError:
-    from urllib.parse import urlparse
 from lxml import html
 import tempfile
 
@@ -357,7 +352,7 @@ class HadalyApp(App):
         return result
 
     def request(self, url):
-        url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        url = urllib.parse.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
         req = UrlRequest(url, debug=True)
         req.wait()
         return req.result
@@ -366,9 +361,9 @@ class HadalyApp(App):
         pb = ProgressBar(id='_pb')
         self.progress_dialog = Popup(title='Downloading...',
                                      size_hint=(0.5, 0.2), content=pb, auto_dismiss=False)
-        url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        url = urllib.parse.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
         path = os.path.join(self.tempdir,
-                            os.path.basename(urlparse(url).path))
+                            os.path.basename(urllib.parse.urlparse(url).path))
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0"}
         req = UrlRequest(url, self.reload_slide, file_path=path, on_progress=self.show_download_progress,
                          req_headers=headers, debug=True)
@@ -382,12 +377,12 @@ class HadalyApp(App):
 
     def reload_slide(self, request, data):
         Logger.debug('Application: Download finished, reloading slide source.')
-        slide_path = urlparse(request.url)
+        slide_path = urllib.parse.urlparse(request.url)
         filename = os.path.basename(slide_path[2])
 
         slides = [slide for slide in self.root.get_screen('editor').slides_view.grid_layout.children]
         for slide in slides:
-            img_src = urlparse(slide.img.img_src)
+            img_src = urllib.parse.urlparse(slide.img.img_src)
             if img_src[0] == 'http' and img_src[2].endswith(filename):
                 Logger.debug('Application: Found slide ! Updating image source...')
                 slide.img.img_src = os.path.join(self.tempdir, filename)
@@ -434,7 +429,7 @@ class HadalyApp(App):
         url = engines[engine].format(term=term,
                                      rpp=self.config.get('search', 'search_rpp'),
                                      page=page)
-        clean_url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        clean_url = urllib.parse.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
 
         UrlRequest(clean_url, on_success=self.parse_results, debug=True)
 
@@ -443,7 +438,7 @@ class HadalyApp(App):
         search_screen = self.root.get_screen('search')
         results = []
 
-        if 'metmuseum' in urlparse(request.url).hostname:
+        if 'metmuseum' in urllib.parse.urlparse(request.url).hostname:
 
             try:
                 total_pages = tree.xpath(
@@ -464,13 +459,13 @@ class HadalyApp(App):
                         object.xpath('./div[@class="list-view-object-info"]/div[@class="artist"]/text()')[::2][0]
                 except IndexError:
                     result['artist'] = 'Unknown'
-                result['thumb'] = urllib.quote(object.xpath('./div[@class="list-view-thumbnail"]//img/@src')[0],
+                result['thumb'] = urllib.parse.quote(object.xpath('./div[@class="list-view-thumbnail"]//img/@src')[0],
                                                safe="%/:=&?~#+!$,;'@()*[]")
                 object_info = object.xpath('./div[@class="list-view-object-info"]/div[@class="objectinfo"]/text()')
                 result['year'] = object_info[0].strip('Dates: ')
                 results.append(result)
 
-        elif 'getty' in urlparse(request.url).hostname:
+        elif 'getty' in urllib.parse.urlparse(request.url).hostname:
 
             try:
                 search_screen.box.total_pages = tree.xpath('//td[@class="cs-page"]//input/@count')[0]
@@ -490,7 +485,7 @@ class HadalyApp(App):
             obj_link = tree.xpath(
                 '//div[@class="cs-result-data-brief"]//td[* = "Title:" or * = "Primary Title:"]/following-sibling::td[1]/p[@class="cs-record-link"]/a/@href')
 
-            results = [{'title': a, 'artist': b, 'year': c, 'thumb': urllib.quote(d, safe="%/:=&?~#+!$,;'@()*[]"),
+            results = [{'title': a, 'artist': b, 'year': c, 'thumb': urllib.parse.quote(d, safe="%/:=&?~#+!$,;'@()*[]"),
                         'obj_link': e}
                        for a, b, c, d, e in zip(titles, artists, dates, thumb, obj_link)]
 

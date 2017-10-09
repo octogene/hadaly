@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import division, unicode_literals, absolute_import
-
-try:
-    from urlparse import urlparse, parse_qs
-except ImportError:
-    from urllib.parse import urlparse, parse_qs
 import urllib
 from lxml import html
 
@@ -112,7 +106,7 @@ class SearchItemInfo(Popup):
         if self.provider == 'MET':
             # Check if high-res is available.
             url = self.photo['thumb'].replace('web-thumb', 'original')
-            req = urllib.urlopen(url)
+            req = urllib.request.urlopen(url)
             if req.getcode() == 404:
                 Logger.debug('Search: High-res image not available.')
                 self.app.show_popup(_('Error'), _('High-res image not available, downloading inferior quality.'))
@@ -124,12 +118,12 @@ class SearchItemInfo(Popup):
 
         elif self.provider == 'Getty':
 
-            req = urllib.urlopen(self.photo['obj_link'])
+            req = urllib.request.urlopen(self.photo['obj_link'])
             tree = html.parse(req)
             img_link = tree.xpath('//div[@class="cs-result-image"]//span[@class="nav"]/a/@href')
             if img_link:
-                link = urlparse(tree.xpath('//div[@class="cs-result-image"]//span[@class="nav"]/a/@href')[0])
-                url = parse_qs(link.query)['dlimgurl'][0]
+                link = urllib.parse.urlparse(tree.xpath('//div[@class="cs-result-image"]//span[@class="nav"]/a/@href')[0])
+                url = urllib.parse.parse_qs(link.query)['dlimgurl'][0]
             else:
                 url = self.photo['thumb']
             slide.img_src = url
