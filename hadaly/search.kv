@@ -22,17 +22,18 @@
         id: action_overflow
     ActionGroup:
         mode: 'spinner'
+        auto_dismiss: True
         font_size: '20sp'
         text:_('Select a search engine')
         id: _action_group
         ActionButton:
             text: 'MetMuseum'
-            on_press: root.action_group.text = self.text
-            on_release: self.parent.parent.select(self.text)
+            on_press: _action_group.text = self.text
+            on_release: _action_group._dropdown.select(self.parent.parent.select(self.text))
         ActionButton:
             text: 'Getty OCI'
-            on_press: root.action_group.text = self.text
-            on_release: self.parent.parent.select(self.text)
+            on_press: _action_group.text = self.text
+            on_release: _action_group._dropdown.select(self.parent.parent.select(self.text))
 
 <SearchBox>:
     app: app
