@@ -73,6 +73,7 @@ class HadalyApp(App):
         config.set('editor', 'autosave_time', '15')
         config.set('editor', 'autosave', '0')
         config.set('editor', 'font_size', '12')
+        config.set('editor', 'last_dir', os.path.expanduser('~'))
         config.set('viewer', 'thumb', '1')
         config.set('viewer', 'thumb_pos', 'bottom left')
         config.set('viewer', 'font_size', '15')
@@ -188,6 +189,8 @@ class HadalyApp(App):
     def show_file_explorer(self):
         popup = Popup(size_hint=(0.8, 0.8))
         file_explorer = FileChooserListView(filters=['*.jpg', '*.png', '*.jpeg'])
+        if os.path.exists(self.config.get('editor', 'last_dir')):
+            file_explorer.path = self.config.get('editor', 'last_dir')
         file_explorer.bind(on_submit=self.show_add_slide)
         file_explorer.popup = popup
         popup.content = file_explorer
@@ -295,6 +298,8 @@ class HadalyApp(App):
         :param img_source: image path as string.
         """
         original_src.popup.dismiss()
+        self.config.set('editor', 'last_dir',
+                        os.path.dirname(original_src.selection[0]))
         thumb_src = self.create_thumbnail(original_src.selection[0])
         slide_popup = SlideInfoDialog(slide=Slide(img_src=original_src.selection[0],
                                                   thumb_src=thumb_src,
