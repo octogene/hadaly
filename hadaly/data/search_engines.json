@@ -1,6 +1,6 @@
 {
   "www.metmuseum.org": {
-    "base_url": "http://www.metmuseum.org/api/collection/collectionlisting?showOnly=withImage&",
+    "base_url": "https://www.metmuseum.org/api/collection/collectionlisting?showOnly=withImage&",
     "params": {
       "rpp": "perPage",
       "artist": "artist",
@@ -13,7 +13,8 @@
       "order": "sortOrder",
       "orderings": {
         "asc": "asc"
-      }
+      },
+      "offset": "offset"
     },
     "results": {
       "format": "json",

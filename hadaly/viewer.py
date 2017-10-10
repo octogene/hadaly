@@ -3,7 +3,7 @@
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scatter import Matrix
 from kivy.uix.scatterlayout import ScatterLayout
-from kivy.uix.image import Image
+from kivy.uix.image import Image, AsyncImage
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.stencilview import StencilView
 from kivy.uix.popup import Popup
@@ -174,7 +174,7 @@ class SlideViewer(ScatterLayout):
 
                 if all(child.id != 'img_zoom' for child in self.parent.children):
                     # TODO: Change thumbnail position and size based on config.
-                    thumb = Image(source=self.image.source,
+                    thumb = AsyncImage(source=self.image.source,
                                   id='img_zoom',
                                   size_hint=(None, None),
                                   keep_ratio=True,

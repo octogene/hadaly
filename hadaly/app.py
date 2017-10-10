@@ -422,9 +422,20 @@ class HadalyApp(App):
 
     def search_term(self, term, engine, page):
 
-        params = urllib.parse.urlencode({self.engines[engine]['params']['term']: term,
-                            self.engines[engine]['params']['rpp']: self.config.get('search', 'search_rpp'),
-                            self.engines[engine]['params']['page']: page})
+        if engine == "www.metmuseum.org":
+            offset = (page - 1) * int(self.config.get('search', 'search_rpp'))
+
+            params = urllib.parse.urlencode(
+                {self.engines[engine]['params']['term']: term,
+                 self.engines[engine]['params']['rpp']: self.config.get(
+                     'search', 'search_rpp'),
+                 self.engines[engine]['params']['offset']: offset})
+        else:
+            params = urllib.parse.urlencode(
+                {self.engines[engine]['params']['term']: term,
+                 self.engines[engine]['params']['rpp']: self.config.get(
+                     'search', 'search_rpp'),
+                self.engines[engine]['params']['page']: page})
 
         url = ''.join((self.engines[engine]['base_url'], params))
 
