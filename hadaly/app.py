@@ -568,11 +568,11 @@ class Manager(ScreenManager):
         elif key == 258 and self.current == 'viewer':
             current_slide = self.get_screen('viewer').carousel.current_slide
             current_slide.viewer.painter.current_tool = 'line'
-        elif key == 268 and self.current == 'viewer':
+        elif key == 269 and self.current == 'viewer':
             current_slide = self.get_screen('viewer').carousel.current_slide
             painter = current_slide.viewer.painter
-            painter.tools[painter.current_tool]['thickness'] -= 0.1
+            painter.thickness -= 0.5
         elif key == 270 and self.current == 'viewer':
             current_slide = self.get_screen('viewer').carousel.current_slide
             painter = current_slide.viewer.painter
-            painter.tools[painter.current_tool]['thickness'] += 0.1
+            painter.thickness += 0.5

@@ -195,9 +195,12 @@ class SlideViewer(ScatterLayout):
             self.do_rotation = False
             self.do_scale = False
             self.do_translation = False
-            self.slidebox.toolbar.add_widget(PainterToolBar(painter=self.painter,
-                                                            paint_color=self.painter.tools[self.painter.current_tool][
-                                                                'color']))
+            toolbar = PainterToolBar(painter=self.painter,
+                                     paint_color=self.painter.tools[self.painter.current_tool]['color'],
+                                     thickness=self.painter.thickness)
+            self.painter.bind(thickness=toolbar.on_thickness)
+            toolbar.bind(paint_color=self.painter.on_color)
+            self.slidebox.toolbar.add_widget(toolbar)
             self.app.root.get_screen('viewer').carousel.scroll_timeout = 50
         elif self.locked:
             Logger.info('Application: Unlocking Slide.')
@@ -218,21 +221,22 @@ class SlideViewer(ScatterLayout):
 class PainterToolBar(BoxLayout):
     painter = ObjectProperty(None)
     paint_color = ListProperty((1, 1, 1, 1))
-    thickness = NumericProperty(None)
+    thickness = NumericProperty(0.5)
 
-    def show_color_picker(self):
+    def show_color_picker(self, current_color):
         popup = Popup(title='Color Picker',
                       size_hint=(0.5, 0.5))
-        color_picker = ColorPicker()
-        color_picker.bind(color=self.on_color)
+        color_picker = ColorPicker(color=current_color)
+        color_picker.bind(color=self.on_paint_color)
         popup.content = color_picker
         popup.open()
 
-    def on_color(self, instance, value):
-        self.paint_color = self.painter.tools[self.painter.current_tool]['color'] = value
+    def on_paint_color(self, instance, value):
+        self.paint_color = value
 
     def on_thickness(self, instance, value):
-        self.painter.tools[self.painter.current_tool]['thickness'] = value
+        self.thickness = value
+        self.painter.thickness = value
 
 
 class SlidesDialog(Popup):

@@ -4,27 +4,33 @@ import math
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.vector import Vector
-from kivy.properties import StringProperty, DictProperty, BooleanProperty
+from kivy.properties import StringProperty, DictProperty, BooleanProperty, BoundedNumericProperty, ListProperty
 
 
 class Painter(Widget):
-    tools = DictProperty({'arrow': {'color': (1, 0, 1, 1), 'thickness': 0.4},
+    tools = DictProperty({'arrow': {'color': (1, 1, 1, 1), 'thickness': 0.4},
                           'line': {'color': (1, 1, 1, 1), 'thickness': 0.4},
                           'eraser': {'thickness': 0.4}
                           })
     current_tool = StringProperty('arrow')
+    thickness = BoundedNumericProperty(1, min=0.5, max=10, errorvalue=0.5)
+    color = ListProperty((1, 1, 1, 1))
     locked = BooleanProperty(False)
+
+    def on_thickness(self, instance, value):
+        self.thickness = value
+
+    def on_color(self, instance, value):
+        self.color = value
 
     def on_touch_down(self, touch):
         if not self.locked and self.collide_point(*touch.pos):
             touch.grab(self)
-            color = self.tools[self.current_tool]['color']
-            thickness = self.tools[self.current_tool]['thickness']
             with self.canvas:
-                Color(*color, mode='rgba')
-                touch.ud['line'] = Line(points=(touch.x, touch.y), width=thickness, cap='round', joint='miter')
+                Color(*self.color, mode='rgba')
+                touch.ud['line'] = Line(points=(touch.x, touch.y), width=self.thickness, cap='round', joint='miter')
                 if self.current_tool == 'arrow':
-                    touch.ud['arrowhead'] = Line(width=thickness, cap='square', joint='miter')
+                    touch.ud['arrowhead'] = Line(width=self.thickness, cap='square', joint='miter')
                 touch.ud['initial_pos'] = touch.pos
         else:
             return False
@@ -52,8 +58,8 @@ class Painter(Widget):
         # TODO: Adjust arrowhead size according to line thickness.
         A = Vector(start)
         B = Vector(end)
-        h = 5 * math.sqrt(3)
-        w = 5
+        h = 10 * math.sqrt(3)
+        w = 10
         U = (B - A) / Vector(B - A).length()
         V = Vector(-U.y, U.x)
         v1 = B - h * U + w * V

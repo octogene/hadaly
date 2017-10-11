@@ -127,7 +127,6 @@
     id: _toolbar
     orientation: 'horizontal'
     color_picker: _color_picker
-    thickness: _slider.value
     size_hint: None, None
     size: (200, 40)
     spacing: dp(3)
@@ -146,18 +145,20 @@
         border_color: [1,1,1,1]
         text: u'\uf111'
         color: root.paint_color
+        on_color: root.paint_color = self.color
         font_name: 'data/fonts/fontawesome-webfont.ttf'
         font_size: '30sp'
         size_hint: (None, None)
         size: (dp(30), dp(30))
-        on_press: root.show_color_picker()
+        on_press: root.show_color_picker(self.color)
     Slider:
         id: _slider
         orientation: 'horizontal'
-        min:0.5
-        max:10
+        min: 0.5
+        max: 10
         step: 0.5
-        value: 0.5
+        value: root.thickness
+        on_value: root.thickness = self.value
 
 
 
