@@ -69,9 +69,11 @@ class HadalyApp(App):
         return root
 
     def build_config(self, config):
+        config.add_section('general')
         config.add_section('viewer')
         config.add_section('editor')
         config.add_section('search')
+        config.set('general', 'switch_on_start', 1)
         config.set('editor', 'autosave_time', '15')
         config.set('editor', 'autosave', '0')
         config.set('editor', 'font_size', '12')
@@ -92,16 +94,19 @@ class HadalyApp(App):
             if argv[1].endswith('.opah') and tarfile.is_tarfile(argv[1]):
                 self.load_presentation(os.path.dirname(argv[1]), [os.path.basename(argv[1])])
                 Logger.info('Application: file \'{file}\' loaded'.format(file=self.filename))
-                self.root.current = 'viewer'
         except IndexError:
             pass
 
     def load_presentation(self, path, filename):
         if len(self.root.get_screen('editor').slides_view.grid_layout.children) > 0:
             self.clear()
+
         self.extract_opah(path, filename)
         self.load_json()
         self.load_slides(path, filename)
+
+        if self.config.getint('general', 'switch_on_start'):
+            self.root.current = 'viewer'
 
     def extract_opah(self, path, filename):
 
