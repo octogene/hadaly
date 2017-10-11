@@ -90,17 +90,29 @@ class HadalyApp(App):
         self.presentation['title'] = _('New Title')
         self.engines = json.load(open('hadaly/data/search_engines.json'))
         try:
-            if argv[1].endswith('.opah'):
-                self.load_slides(os.path.dirname(argv[1]), [os.path.basename(argv[1])])
+            if argv[1].endswith('.opah') and tarfile.is_tarfile(argv[1]):
+                self.load_presentation(os.path.dirname(argv[1]), [os.path.basename(argv[1])])
                 Logger.info('Application: file \'{file}\' loaded'.format(file=self.filename))
                 self.root.current = 'viewer'
         except IndexError:
             pass
 
-    def load_slides(self, path, filename):
+    def load_presentation(self, path, filename):
+        if len(self.editorscreen.slides_view.grid_layout.children) > 0:
+            self.clear()
+        self.extract_opah(path, filename)
+        self.load_json()
+        self.load_slides(path, filename)
+
+    def extract_opah(self, path, filename):
 
         try:
             with tarfile.open(os.path.join(path, filename[0]), 'r:*') as tar:
+                #Check filename in tar
+                for file in tar.getmembers():
+                    if file.name.startswith(('..', '/')):
+                        raise ValueError
+
                 tar.extractall(path=self.tempdir)
         except ValueError as msg:
             Logger.debug('Application: {msg}'.format(msg=msg))
@@ -108,40 +120,48 @@ class HadalyApp(App):
         except IndexError as msg:
             Logger.debug('Application: {msg}'.format(msg=msg))
             self.show_popup(_('Error'), _('No file selected'))
-        else:
-            if len(self.root.current_screen.slides_view.grid_layout.children) > 0:
-                self.clear()
+        except PermissionError as msg:
+            Logger.debug('Application: {msg}'.format(msg=msg))
+            self.show_popup(_('Error'),
+                            _('You don\'t have permission to access this file.'))
 
-            try:
-                with open(os.path.join(self.tempdir, 'presentation.json'), 'r') as fd:
-                    data = json.load(fd)
-            except ValueError as msg:
-                Logger.debug('Application (JSON Loading): {msg}'.format(msg=msg))
+    def load_json(self):
+        try:
+            with open(os.path.join(self.tempdir,
+                                   'presentation.json'), 'r') as fd:
+                data = json.load(fd)
+        except ValueError as msg:
+            Logger.debug('Application (JSON Loading): {msg}'.format(msg=msg))
 
-            self.dirname = path
-            self.filename = filename[0]
+        return data
 
-            self.presentation = data
-            self.presentation_title = data['title']
+    def load_slides(self, path, filename):
+        data = self.load_json()
 
-            for slide in reversed(self.presentation['slides']):
-                # TODO: Remove tmp in filename on save
-                thumb_src = os.path.join(self.tempdir, slide['thumb_src'])
-                img_src = os.path.join(self.tempdir, slide['img_src'])
-                index = self.presentation['slides'].index(slide)
-                self.presentation['slides'][index]['thumb_src'] = thumb_src
-                self.presentation['slides'][index]['img_src'] = img_src
+        self.dirname = path
+        self.filename = filename[0]
 
-                img_slide = Factory.Slide(img_src=str(img_src),
-                                          thumb_src=str(thumb_src),
-                                          artist=slide['artist'],
-                                          title=slide['title'],
-                                          year=slide['year']
-                                          )
+        self.presentation = data
+        self.presentation_title = data['title']
 
-                drag_slide = Factory.DraggableSlide(img=img_slide, app=self)
+        for slide in reversed(self.presentation['slides']):
+            # TODO: Remove tmp in filename on save
+            thumb_src = os.path.join(self.tempdir, slide['thumb_src'])
+            img_src = os.path.join(self.tempdir, slide['img_src'])
+            index = self.presentation['slides'].index(slide)
+            self.presentation['slides'][index]['thumb_src'] = thumb_src
+            self.presentation['slides'][index]['img_src'] = img_src
 
-                self.root.current_screen.slides_view.grid_layout.add_widget(drag_slide)
+            img_slide = Factory.Slide(img_src=str(img_src),
+                                      thumb_src=str(thumb_src),
+                                      artist=slide['artist'],
+                                      title=slide['title'],
+                                      year=slide['year']
+                                      )
+
+            drag_slide = Factory.DraggableSlide(img=img_slide, app=self)
+
+            self.editorscreen.slides_view.grid_layout.add_widget(drag_slide)
 
     def clear(self):
         self.root.current_screen.slides_view.grid_layout.clear_widgets()
