@@ -1,6 +1,6 @@
 # Hadaly
 
-<img align="right" height="200" src="https://github.com/octogene/hadaly/raw/master/docs/_static/logo/logo_2.png"/>
+<img align="right" height="200" src="https://code.lm7.fr/octogene/hadaly/raw/master/docs/_static/logo/logo_2.png"/>
 
 
 This sofware is currently in alpha.
