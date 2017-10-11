@@ -8,8 +8,9 @@ from kivy.properties import StringProperty, DictProperty, BooleanProperty, Bound
 
 
 class Painter(Widget):
-    tools = DictProperty({'arrow': {'color': (1, 1, 1, 1), 'thickness': 0.4},
-                          'line': {'color': (1, 1, 1, 1), 'thickness': 0.4},
+    tools = DictProperty({'arrow': {'color': (1, 1, 1, 1), 'thickness': 0.5},
+                          'line': {'color': (1, 1, 1, 1), 'thickness': 0.5},
+                          'freeline': {'color': (1, 1, 1, 1), 'thickness': 0.5},
                           'eraser': {'thickness': 0.4}
                           })
     current_tool = StringProperty('arrow')
@@ -40,7 +41,10 @@ class Painter(Widget):
     def on_touch_move(self, touch):
         if not self.locked and self.collide_point(*touch.pos):
             try:
-                touch.ud['line'].points = [touch.ox, touch.oy, touch.x, touch.y]
+                if self.current_tool == 'freeline':
+                    touch.ud['line'].points += [touch.x, touch.y]
+                else:
+                    touch.ud['line'].points = [touch.ox, touch.oy, touch.x, touch.y]
             except KeyError:
                 pass
         else:
