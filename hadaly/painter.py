@@ -23,7 +23,8 @@ class Painter(Widget):
             with self.canvas:
                 Color(*color, mode='rgba')
                 touch.ud['line'] = Line(points=(touch.x, touch.y), width=thickness, cap='round', joint='miter')
-                touch.ud['arrowhead'] = Line(width=thickness, cap='square', joint='miter')
+                if self.current_tool == 'arrow':
+                    touch.ud['arrowhead'] = Line(width=thickness, cap='square', joint='miter')
                 touch.ud['initial_pos'] = touch.pos
         else:
             return False
@@ -60,7 +61,8 @@ class Painter(Widget):
         return (v1, v2)
 
     def on_touch_up(self, touch):
-        if not self.locked and touch.grab_current == self and self.collide_point(*touch.pos):
+        if not self.locked and touch.grab_current == self and \
+                self.collide_point(*touch.pos) and self.current_tool == 'arrow':
             try:
                 arrowhead = self.arrowhead(touch.ud['initial_pos'], touch.pos)
             except KeyError:
