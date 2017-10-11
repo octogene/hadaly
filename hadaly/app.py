@@ -40,15 +40,17 @@ from kivy.uix.filechooser import FileChooserIconView, FileChooserListView
 
 
 class HadalyApp(App):
-    presentation = DictProperty({'app': ('hadaly', app_version), 'title': 'New Title', 'slides': []})
-
-    slides_list = ListProperty()
-
-    filename = StringProperty('')
-
-    dirname = StringProperty('')
-
     use_kivy_settings = True
+
+    def __init__(self):
+        super(HadalyApp, self).__init__()
+        self.tempdir = tempfile.mkdtemp()
+        self.filename = ''
+        self.dirname = ''
+        self.presentation = {'app': ('hadaly', app_version),
+                             'title': _('New Title'),
+                             'slides': []}
+        self.engines = json.load(open('hadaly/data/search_engines.json'))
 
     def build(self):
         self.icon = str('data/icon.png')
@@ -56,13 +58,13 @@ class HadalyApp(App):
 
         root = Manager(transition=FadeTransition(duration=.35))
 
-        self.searchscreen = Factory.SearchScreen(name='search')
-        self.viewerscreen = Factory.ViewerScreen(name='viewer')
-        self.editorscreen = Factory.EditorScreen(name='editor')
+        search_screen = Factory.SearchScreen(name='search')
+        viewer_screen = Factory.ViewerScreen(name='viewer')
+        editor_screen = Factory.EditorScreen(name='editor')
 
-        root.add_widget(self.editorscreen)
-        root.add_widget(self.viewerscreen)
-        root.add_widget(self.searchscreen)
+        root.add_widget(editor_screen)
+        root.add_widget(viewer_screen)
+        root.add_widget(search_screen)
 
         return root
 
@@ -86,9 +88,6 @@ class HadalyApp(App):
                                 'hadaly/data/settings_panel.json')
 
     def on_start(self):
-        self.tempdir = tempfile.mkdtemp()
-        self.presentation['title'] = _('New Title')
-        self.engines = json.load(open('hadaly/data/search_engines.json'))
         try:
             if argv[1].endswith('.opah') and tarfile.is_tarfile(argv[1]):
                 self.load_presentation(os.path.dirname(argv[1]), [os.path.basename(argv[1])])
@@ -98,7 +97,7 @@ class HadalyApp(App):
             pass
 
     def load_presentation(self, path, filename):
-        if len(self.editorscreen.slides_view.grid_layout.children) > 0:
+        if len(self.root.get_screen('editor').slides_view.grid_layout.children) > 0:
             self.clear()
         self.extract_opah(path, filename)
         self.load_json()
@@ -142,7 +141,6 @@ class HadalyApp(App):
         self.filename = filename[0]
 
         self.presentation = data
-        self.presentation_title = data['title']
 
         for slide in reversed(self.presentation['slides']):
             # TODO: Remove tmp in filename on save
@@ -161,7 +159,7 @@ class HadalyApp(App):
 
             drag_slide = Factory.DraggableSlide(img=img_slide, app=self)
 
-            self.editorscreen.slides_view.grid_layout.add_widget(drag_slide)
+            self.root.get_screen('editor').slides_view.grid_layout.add_widget(drag_slide)
 
     def clear(self):
         self.root.current_screen.slides_view.grid_layout.clear_widgets()
