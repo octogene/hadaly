@@ -19,10 +19,14 @@ class Painter(Widget):
     locked = BooleanProperty(False)
 
     def on_thickness(self, instance, value):
-        self.thickness = value
+        self.tools[self.current_tool]['thickness'] = value
 
     def on_color(self, instance, value):
-        self.color = value
+        self.tools[self.current_tool]['color'] = value
+
+    def on_current_tool(self, instance, value):
+        self.color = self.tools[value]['color']
+        self.thickness = self.tools[value]['thickness']
 
     def on_touch_down(self, touch):
         if not self.locked and self.collide_point(*touch.pos):

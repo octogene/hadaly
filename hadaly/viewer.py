@@ -199,7 +199,7 @@ class SlideViewer(ScatterLayout):
                                      paint_color=self.painter.tools[self.painter.current_tool]['color'],
                                      thickness=self.painter.thickness)
             self.painter.bind(thickness=toolbar.on_thickness)
-            toolbar.bind(paint_color=self.painter.on_color)
+            self.painter.bind(color=toolbar.on_paint_color)
             self.slidebox.toolbar.add_widget(toolbar)
             self.app.root.get_screen('viewer').carousel.scroll_timeout = 50
         elif self.locked:
@@ -233,6 +233,7 @@ class PainterToolBar(BoxLayout):
 
     def on_paint_color(self, instance, value):
         self.paint_color = value
+        self.painter.color = value
 
     def on_thickness(self, instance, value):
         self.thickness = value
